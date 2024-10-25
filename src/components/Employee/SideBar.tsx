@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 import useStore from './LoginPage/store';
 import { GrDocumentText } from "react-icons/gr";
 import { useState } from 'react';
-import { GiHamburgerMenu } from "react-icons/gi";
+// import { GiHamburgerMenu } from "react-icons/gi";
 import { BiLogOutCircle } from "react-icons/bi";
 import { useRef } from 'react';
 
@@ -32,20 +32,20 @@ import {
    DropdownMenuTrigger,
  } from "@/components/ui/dropdown-menu"
 
-import {
-   Sheet,
-   SheetContent,
-   SheetDescription,
-   SheetHeader,
-   SheetTitle,
-   SheetTrigger,
- } from "@/components/ui/sheet"
+// import {
+//    Sheet,
+//    SheetContent,
+//    SheetDescription,
+//    SheetHeader,
+//    SheetTitle,
+//    SheetTrigger,
+//  } from "@/components/ui/sheet"
 
-import {
-   Popover,
-   PopoverContent,
-   PopoverTrigger,
- } from "@/components/ui/popover"
+// import {
+//    Popover,
+//    PopoverContent,
+//    PopoverTrigger,
+//  } from "@/components/ui/popover"
 import { Bell } from 'lucide-react';
 import {
   Dialog,
@@ -53,7 +53,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+//   DialogTrigger,
 } from "@/components/ui/dialog"
  
 

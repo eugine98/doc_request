@@ -26,14 +26,14 @@ interface intEmpDatabase {
 
 import {
     AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
+    // AlertDialogAction,
+    // AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
+    // AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
   import { Label } from "@/components/ui/label"
 
