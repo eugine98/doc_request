@@ -46,6 +46,15 @@ import {
    PopoverContent,
    PopoverTrigger,
  } from "@/components/ui/popover"
+import { Bell } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
  
 
 function SideBar() {
@@ -56,9 +65,11 @@ function SideBar() {
       navigate("/login");
       // Optionally, you can add a notification or UI update here
   };
+
    const location = useLocation();
    const navigate = useNavigate();
    const [isOpen, setIsOpen] = useState(false);
+   const [isOpenNotif, setIsOpenNotif] = useState(false);
    const openDialog = () => setIsOpen(true);
    const closeDialog = () => setIsOpen(false);
 
@@ -115,65 +126,7 @@ function SideBar() {
     </div>
       <div className='bg-[]'>
 
-      <Sheet>
-      <SheetTrigger>
-      <div className='w-8 h-8 fixed top-4 left-4 sm:hidden block z-30 hover:cursor-pointer hover:text-blue-600 hover:bg-gray-200 rounded-md'>
-            <GiHamburgerMenu className='w-8 h-8 p-1'/>
-         </div>
-      </SheetTrigger>
-      <SheetContent side={'left'} className='w-60 sm:hidden block'>
-         <SheetHeader>
-            <SheetTitle>
-            <DropdownMenu>
-                  <DropdownMenuTrigger>
-                  <motion.div drag className='group flex hover:cursor-pointer'>
-                        <img src={empData.picture_location} className="h-6 rounded-full me-2 sm:h-8" alt="logo" />
-                        <div className=''>
-                        <p className='font-bold text-xs group-hover:text-blue-600 group flex justify-start'>{empData.first_name} {empData.last_name}</p>
-                        <p className='text-[0.7rem] font-bold text-gray-700 flex justify-start'>{empData.job_job_title}</p>
-                        </div>
-                     </motion.div>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className='mb-3 w-56 sm:block hidden bg-slate-200 z-50' align='center'>
-                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                     <DropdownMenuSeparator />
-                     <DropdownMenuItem className='flex hover:cursor-pointer hover:bg-white z-50' onClick={() => openDialog()}>
-                     < div className='flex hover:text-blue-600 '>
-                           <BiLogOutCircle className='h-5 w-5 mt-0.5 me-2'/> 
-                           <p className='text-sm'>Logout</p>
-                           </div>
-                     </DropdownMenuItem>
-                  </DropdownMenuContent>
-                  </DropdownMenu>
-            </SheetTitle>
-            <SheetDescription>
-            This action cannot be undone. This will permanently delete your account
-            and remove your data from our servers.
-            </SheetDescription>
-            <ul>
-               <li>
-              
-               </li>
-               <li>
-                  Request ITR
-               </li>
-               <li>
-               Request COE
-               </li>
-               <li>
-               Request COC 
-               </li>
-               <li>
-               Request CF1
-               </li>
-               <li>
-               Request 13th Month Pay
-               </li>
-            </ul>
 
-         </SheetHeader>
-      </SheetContent>
-      </Sheet>
         
        
 {/* sidebar */}
@@ -239,19 +192,29 @@ function SideBar() {
    // style={{ backgroundColor: '#74EBD5',}}
    >
 
-   <Popover>
+   {/* <Popover>
   <PopoverTrigger>
-  <motion.div drag className='group flex hover:cursor-pointer'>
+   <div className='flex justify-between'>
+      <motion.div drag className='group flex hover:cursor-pointer'>
       <img src={empData.picture_location} className="h-6 rounded-full me-2 sm:h-8" alt="logo" />
-      <div className=' '>
+      <div className=''>
         <p className='font-bold text-xs group-hover:text-blue-600 group flex justify-start text-justify pr-2'>{empData.first_name} {empData.last_name}</p>
         <p className='text-[0.7rem] font-bold text-gray-700 flex justify-start'>{empData.job_job_title}</p>
       </div>
     </motion.div>
+    <Bell className='w-5 h-5 ms-3' />
+   </div>
   </PopoverTrigger>
   <PopoverContent className="relative w-56 mb-3 h-16  justify-center sm:block hidden bg-slate-200">
    <div className=' w-full h-9 mb-3'>
    <ul className='w-full'>
+      <li className='flex justify-center p-1 rounded-sm hover:bg-gray-300 font-semibold text-gray-800 hover:text-blue-600 border border-gray-300 hover:cursor-pointer' onClick={() => openDialog()}>
+         <div className='flex'>
+         <Bell className='h-5 w-5 mt-0.5 me-2' /> 
+         <p>Notif</p>
+         </div>
+      
+      </li>
       <li className='flex justify-center p-1 rounded-sm hover:bg-gray-300 font-semibold text-gray-800 hover:text-blue-600 border border-gray-300 hover:cursor-pointer' onClick={() => openDialog()}>
          <div className='flex'>
          <BiLogOutCircle className='h-5 w-5 mt-0.5 me-2' /> 
@@ -262,7 +225,84 @@ function SideBar() {
    </ul>
    </div>
   </PopoverContent>
-</Popover>
+</Popover> */}
+   <Dialog open={isOpenNotif} onOpenChange={setIsOpenNotif}>
+   <DialogContent className='w-1/2'>
+      <DialogHeader>
+         <DialogTitle>
+         < div className='flex'>
+            <div className='relative w-5 h-5 me-1'>
+            <Bell className='w-5 h-5 absolute' />
+            <div className='h-2 w-2 absolute -top-0.5 right-0 rounded-full bg-orange-600 animate-pulse'/>
+            </div>
+         <p className='text-sm'>Notification</p>
+         </div>   
+         </DialogTitle>
+         <DialogDescription>
+         {/* This action cannot be undone. This will permanently delete your account
+         and remove your data from our servers. */}
+         </DialogDescription>
+      </DialogHeader>
+      <ul className='w-full space-y-2'>
+         <li className='border-b border-gray-200 p-2 flex justify-between'> 
+            <div className='flex'>
+               <GrDocumentText className='mt-0.5 me-1'/> 
+               <p className='text-sm'>ITR For Claim</p>
+            </div>
+            <div className='text-gray-400 text-xs'>
+               2 hours ago
+            </div>
+         </li>
+         <li className='border-b border-gray-200 p-2 flex justify-between'> 
+            <div className='flex'>
+               <GrDocumentText className='mt-0.5 me-1'/> 
+               <p className='text-sm'>ITR request rejected</p>
+            </div>
+            <div className='text-gray-400 text-xs'>
+               3 hours ago
+            </div>
+         </li>
+      </ul>
+
+   </DialogContent>
+   </Dialog>
+
+<DropdownMenu>
+  <DropdownMenuTrigger>
+   <div className='flex justify-between'>
+   <motion.div drag className='group flex hover:cursor-pointer'>
+      <img src={empData.picture_location} className="h-6 rounded-full me-2 sm:h-8" alt="logo" />
+      <div className=''>
+        <p className='font-bold text-xs group-hover:text-blue-600 group flex justify-start'>{empData.first_name} {empData.last_name}</p>
+        <p className='text-[0.7rem] font-bold text-gray-700 flex justify-start'>{empData.job_job_title}</p>
+      </div>
+    </motion.div>
+    <div className='relative w-4 h-5 ms-1'>
+    <Bell className='w-4 h-5 absolute' />
+    <div className='h-2 w-2 absolute -top-0.5 right-0 rounded-full bg-orange-600 animate-pulse'/>
+    </div>
+   </div>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent className='mb-3 w-56 sm:block hidden bg-slate-200' align='center'>
+    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+    <DropdownMenuSeparator />
+    <DropdownMenuItem className='flex hover:cursor-pointer hover:bg-white' onClick={() => setIsOpenNotif(true)}>
+    < div className='flex hover:text-blue-600 '>
+            <div className='relative w-4 h-5 me-2'>
+            <Bell className='w-4 h-5 absolute' />
+            <div className='h-2 w-2 absolute -top-0.5 right-0 rounded-full bg-orange-600 animate-pulse'/>
+            </div>
+         <p className='text-sm'>Notification</p>
+      </div>
+    </DropdownMenuItem>
+    <DropdownMenuItem className='flex hover:cursor-pointer hover:bg-white ' onClick={() => openDialog()}>
+    < div className='flex hover:text-blue-600 '>
+         <BiLogOutCircle className='h-6 w-6 mt-0.5 me-2'/> 
+         <p className='text-sm'>Logout</p>
+         </div>
+    </DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
     
     
    </div>

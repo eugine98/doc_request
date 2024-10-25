@@ -16,6 +16,7 @@ import { toast } from 'sonner';
 import { FaRegCheckCircle } from "react-icons/fa";
 import { MdErrorOutline } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
+// import { Bell } from 'lucide-react';
 
 const schema = z.object({
   // id_no: z.string().min(1, { message: "Name is required." }),
@@ -205,7 +206,7 @@ useEffect(() => {
       </div>
       <div className="absolute w-full h-5 z-20">
         <div className='fixed top-0 border-l-0 border border-gray-200 w-full'>
-        <motion.p className="  font-bold text-2xl w-full bg-white p-4 flex justify-end sm:justify-start border-b border-gray-200 "
+        <motion.p className="font-bold text-2xl w-full bg-white p-4 flex justify-end sm:justify-start border-b border-gray-200 "
           style={{ fontFamily: "Nunito, sans-serif"}}
         >
           ITR/2316
