@@ -11,6 +11,17 @@ import { useState } from 'react';
 // import { GiHamburgerMenu } from "react-icons/gi";
 import { BiLogOutCircle } from "react-icons/bi";
 import { useRef } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import axios from 'axios';
+import { API_SERVER_URL } from '@/config';
+import { useQuery } from '@tanstack/react-query';
+
+import {
+   Accordion,
+   AccordionContent,
+   AccordionItem,
+   AccordionTrigger,
+ } from "@/components/ui/accordion"
 
 import {
   AlertDialog,
@@ -24,6 +35,17 @@ import {
 } from "@/components/ui/alert-dialog"
 
 import {
+   Drawer,
+   DrawerClose,
+   DrawerContent,
+   DrawerDescription,
+   DrawerFooter,
+   DrawerHeader,
+   DrawerTitle,
+   DrawerTrigger,
+ } from "@/components/ui/drawer"
+
+import {
    DropdownMenu,
    DropdownMenuContent,
    DropdownMenuItem,
@@ -32,20 +54,6 @@ import {
    DropdownMenuTrigger,
  } from "@/components/ui/dropdown-menu"
 
-// import {
-//    Sheet,
-//    SheetContent,
-//    SheetDescription,
-//    SheetHeader,
-//    SheetTitle,
-//    SheetTrigger,
-//  } from "@/components/ui/sheet"
-
-// import {
-//    Popover,
-//    PopoverContent,
-//    PopoverTrigger,
-//  } from "@/components/ui/popover"
 import { Bell } from 'lucide-react';
 import {
   Dialog,
@@ -56,10 +64,16 @@ import {
 //   DialogTrigger,
 } from "@/components/ui/dialog"
  
+interface RequestForClaim {
+   request_type: string;
+   time_: string;
+}
 
 function SideBar() {
 //   const decode = (data: string) => atob(data);
    const {empData, deleteEmpData} = useStore();
+   const [requestForClaim, setRequestForClaim] = useState<RequestForClaim[]>([]);
+
    const logout = async () => {
       await deleteEmpData();
       navigate("/login");
@@ -105,6 +119,75 @@ function SideBar() {
          navigate("/login");
       }, 1800000); 
    };
+   const fetch_for_claim_ITR = async () => {
+      try {
+        const formdata = new FormData();
+        formdata.append("employee_name", empData.first_name+ " " +empData.last_name);
+        formdata.append("emp_status", empData.status);
+        formdata.append("id_no", empData.idno);
+        const response = await axios.post(
+          `${API_SERVER_URL}/Api/fetch_for_claim_ITR`,
+          formdata
+        );
+      //   alert(response.data[0].r_date_for_claim);
+        if(response.data.length > 0){
+               const myObject = {
+                  request_type: response.data[0].r_doc_type + ' for claim',
+                  time_: response.data[0].r_date_for_claim,
+               };
+               // Check if the claim already exists
+               const exists = requestForClaim.some(claim => claim.request_type === myObject.request_type);
+               
+               if (!exists) {
+                  setRequestForClaim([myObject]);
+               } else {
+                  alert('Claim already exists!'); // Optional alert for user feedback
+               }
+         }
+      //   return response.data;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        throw error; // Re-throw to allow react-query to handle the error
+      }
+    };
+    const fetch_for_claim_COE = async () => {
+      try {
+        const formdata = new FormData();
+        formdata.append("employee_name", empData.first_name+ " " +empData.last_name);
+        formdata.append("emp_status", empData.status);
+        formdata.append("id_no", empData.idno);
+        const response = await axios.post(
+          `${API_SERVER_URL}/Api/fetch_for_claim_COE`,
+          formdata
+        );
+        console.log("DATA FROM COE: ", response.data)
+      //   alert(response.data[0].r_date_for_claim);
+        if(response.data.length > 0){
+               const myObject = {
+                  request_type: response.data[0].r_doc_type + ' for claim',
+                  time_: response.data[0].r_date_for_claim,
+               };
+               // Check if the claim already exists
+               const exists = requestForClaim.some(claim => claim.request_type === myObject.request_type);
+               
+               if (!exists) {
+                  setRequestForClaim(prevData => [...prevData, myObject]);
+               } else {
+                  alert('Claim already exists!'); // Optional alert for user feedback
+               }
+         }
+      //   return response.data;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        throw error; // Re-throw to allow react-query to handle the error
+      }
+    };
+  
+useEffect(() => {
+   fetch_for_claim_ITR();
+   fetch_for_claim_COE();
+}, [])
+
   return (
     <>
     <div>
@@ -123,6 +206,23 @@ function SideBar() {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+    </div>
+    <div>
+    <Drawer>
+      <DrawerTrigger>Open</DrawerTrigger>
+      <DrawerContent>
+         <DrawerHeader>
+            <DrawerTitle>Are you absolutely sure?</DrawerTitle>
+            <DrawerDescription>This action cannot be undone.</DrawerDescription>
+         </DrawerHeader>
+         <DrawerFooter>
+            {/* <Button>Submit</Button> */}
+            <DrawerClose>
+            {/* <Button variant="outline">Cancel</Button> */}
+            </DrawerClose>
+         </DrawerFooter>
+      </DrawerContent>
+      </Drawer>
     </div>
       <div className='bg-[]'>
 
@@ -192,40 +292,7 @@ function SideBar() {
    // style={{ backgroundColor: '#74EBD5',}}
    >
 
-   {/* <Popover>
-  <PopoverTrigger>
-   <div className='flex justify-between'>
-      <motion.div drag className='group flex hover:cursor-pointer'>
-      <img src={empData.picture_location} className="h-6 rounded-full me-2 sm:h-8" alt="logo" />
-      <div className=''>
-        <p className='font-bold text-xs group-hover:text-blue-600 group flex justify-start text-justify pr-2'>{empData.first_name} {empData.last_name}</p>
-        <p className='text-[0.7rem] font-bold text-gray-700 flex justify-start'>{empData.job_job_title}</p>
-      </div>
-    </motion.div>
-    <Bell className='w-5 h-5 ms-3' />
-   </div>
-  </PopoverTrigger>
-  <PopoverContent className="relative w-56 mb-3 h-16  justify-center sm:block hidden bg-slate-200">
-   <div className=' w-full h-9 mb-3'>
-   <ul className='w-full'>
-      <li className='flex justify-center p-1 rounded-sm hover:bg-gray-300 font-semibold text-gray-800 hover:text-blue-600 border border-gray-300 hover:cursor-pointer' onClick={() => openDialog()}>
-         <div className='flex'>
-         <Bell className='h-5 w-5 mt-0.5 me-2' /> 
-         <p>Notif</p>
-         </div>
-      
-      </li>
-      <li className='flex justify-center p-1 rounded-sm hover:bg-gray-300 font-semibold text-gray-800 hover:text-blue-600 border border-gray-300 hover:cursor-pointer' onClick={() => openDialog()}>
-         <div className='flex'>
-         <BiLogOutCircle className='h-5 w-5 mt-0.5 me-2' /> 
-         <p>Logout</p>
-         </div>
-      
-      </li>
-   </ul>
-   </div>
-  </PopoverContent>
-</Popover> */}
+   
    <Dialog open={isOpenNotif} onOpenChange={setIsOpenNotif}>
    <DialogContent className='w-1/2'>
       <DialogHeader>
@@ -243,26 +310,58 @@ function SideBar() {
          and remove your data from our servers. */}
          </DialogDescription>
       </DialogHeader>
-      <ul className='w-full space-y-2'>
-         <li className='border-b border-gray-200 p-2 flex justify-between'> 
-            <div className='flex'>
-               <GrDocumentText className='mt-0.5 me-1'/> 
-               <p className='text-sm'>ITR For Claim</p>
-            </div>
-            <div className='text-gray-400 text-xs'>
-               2 hours ago
-            </div>
-         </li>
-         <li className='border-b border-gray-200 p-2 flex justify-between'> 
-            <div className='flex'>
-               <GrDocumentText className='mt-0.5 me-1'/> 
-               <p className='text-sm'>ITR request rejected</p>
-            </div>
-            <div className='text-gray-400 text-xs'>
-               3 hours ago
-            </div>
-         </li>
+
+      <Tabs defaultValue="account" className="w-full h-[500px] overflow-y-scroll">
+      <div className="sticky -top-0.5 z-10 bg-white">
+      <TabsList>
+        <TabsTrigger value="account">For Claim</TabsTrigger>
+        <TabsTrigger value="password">Rejected</TabsTrigger>
+      </TabsList>
+    </div>
+      <TabsContent value="account">
+      <ul className='w-full space-y-2 pt-2'>
+            {requestForClaim.length > 0 ? (
+               requestForClaim.map((claim, index) => (
+               <li className='border-b border-gray-200 p-3 flex justify-between' key={index} > 
+               <div className='flex group' onClick={() => { claim.request_type == "ITR for claim" && navigate("/ITR"); setIsOpenNotif(false);} }>
+                     <GrDocumentText className='mt-0.5 me-1 group-hover:cursor-pointer'/> 
+                     <p className='text-sm group-hover:cursor-pointer'>{claim.request_type}</p>
+                  </div>
+                  <div className='text-gray-400 text-xs'>
+                  {claim.time_}
+                  </div>
+               </li>
+               ))
+            ):(
+               <p>No request</p>
+            )}
       </ul>
+      </TabsContent>
+      <TabsContent value="password">
+          <ul className='w-full space-y-2 pt-2'>
+            {requestForClaim.length > 0 ? (
+               requestForClaim.map((claim, index) => (
+               <li className=' border-gray-200 pl-3 pr-3 pt-1 flex justify-between' key={index}> 
+                  <Accordion type="single" collapsible className="w-full">
+                     <AccordionItem value="item-1">
+                        <AccordionTrigger>ITR request</AccordionTrigger>
+                        <AccordionContent className='w-full'>
+                        Date: {claim.time_}
+                        <div>
+                           <p>HR Message:</p>
+                           <p className='ms-4'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis dolores dolore ea delectus dignissimos repellat nam eligendi. Repellendus, vitae earum.</p>
+                        </div>
+                        </AccordionContent>
+                     </AccordionItem>
+                     </Accordion>
+               </li>
+               ))
+            ):(
+               <p>No request</p>
+            )}
+      </ul>
+      </TabsContent>
+      </Tabs>
 
    </DialogContent>
    </Dialog>

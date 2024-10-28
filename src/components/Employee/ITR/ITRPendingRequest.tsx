@@ -6,7 +6,6 @@ import { useQuery } from '@tanstack/react-query';
 // import { CiCircleCheck } from "react-icons/ci";
 import { CircleCheck } from 'lucide-react';
 import { CircleX } from 'lucide-react';
-import { RotateCcw } from 'lucide-react';
 import { CircleEllipsis } from 'lucide-react';
 // import { motion } from 'framer-motion';
 
@@ -61,7 +60,7 @@ const { data : pendingRequest, isLoading,  refetch : refetchPendingRequest } = u
                     type="date" 
                     id="date_requested" 
                     className='mt-1 block w-full border rounded-md p-2'
-                    value={pendingRequest.data.date_requested}
+                    value={pendingRequest.data.r_date_requested}
                    
                 />
                 </div>
@@ -73,30 +72,30 @@ const { data : pendingRequest, isLoading,  refetch : refetchPendingRequest } = u
                     <input 
                       disabled type="text" id="employee_name" 
                       className='mt-1 block w-full border rounded-md  p-2' 
-                      value={pendingRequest.data.employee_name}
+                      value={pendingRequest.data.i_employee_name}
                     />
                 </div>
 
 
-                {pendingRequest.data.emp_status == 'active' && (
+                {pendingRequest.data.i_emp_status == 'active' && (
                 <div>
                     <div className='flex justify-between'>
                         <label htmlFor="department" className="block">Department/Project:</label>
                     </div>
                         <input 
                         disabled type="text" id="department" className='mt-1 block w-full border rounded-md p-2 '
-                        value={pendingRequest.data.department}
+                        value={pendingRequest.data.i_department}
                         />
                     </div>
                 )}
                 
               
-                {pendingRequest.data.emp_status == 'active' && (
+                {pendingRequest.data.i_emp_status == 'active' && (
                 <div>
                     <label htmlFor="designation" className="block">Designation:</label>
                     <input 
                       disabled type="text" id="designation" className='mt-1 block w-full border rounded-md p-2' 
-                      value={pendingRequest.data.designation}
+                      value={pendingRequest.data.i_designation}
                     />
                 </div>
                 )}
@@ -105,7 +104,7 @@ const { data : pendingRequest, isLoading,  refetch : refetchPendingRequest } = u
                     <label htmlFor="status" className="block">Staus:</label>
                     <input 
                       disabled type="text" id="status" className='mt-1 block w-full border rounded-md p-2' 
-                      value={pendingRequest.data.emp_status}
+                      value={pendingRequest.data.i_emp_status}
                     />
                 </div>
                 
@@ -114,7 +113,7 @@ const { data : pendingRequest, isLoading,  refetch : refetchPendingRequest } = u
                       <label htmlFor="date_hired" className="block">Date Hired:</label>
                       <input 
                         disabled type="date" id="date_hired" className='mt-1 block w-full border rounded-md p-2' 
-                        value={pendingRequest.data.date_hired}
+                        value={pendingRequest.data.i_date_hired}
                       />
                     </div>
                     {/* <div>
@@ -130,7 +129,7 @@ const { data : pendingRequest, isLoading,  refetch : refetchPendingRequest } = u
                       <label htmlFor="itr_year" className="block">2316 / ITR for the year:</label>
                       <input 
                         disabled type="text" id="itr_year" className='mt-1 block w-full border rounded-md p-2' 
-                        value={pendingRequest.data.itr_year}
+                        value={pendingRequest.data.i_itr_year}
                       />
                     </div>
 
@@ -138,7 +137,7 @@ const { data : pendingRequest, isLoading,  refetch : refetchPendingRequest } = u
                   <label htmlFor="reason_request" className="block">Reason of Request:</label>
                   <textarea id="reason_request" className='mt-1 block w-full border rounded-md p-2 h-14 ' disabled
                     
-                  >{pendingRequest.data.reason_request}</textarea>
+                  >{pendingRequest.data.i_reason_request}</textarea>
               </div>
               
             </form>
@@ -153,10 +152,10 @@ const { data : pendingRequest, isLoading,  refetch : refetchPendingRequest } = u
                     <ol className="relative text-gray-500 border-s border-gray-100 dark:border-gray-700 dark:text-gray-400 w-full">    
                         {/*1st step*/}
                         <li className="mb-10 ms-6">    
-                            {pendingRequest.data.req_status == 0 || pendingRequest.data.req_status == 1 ? (
+                            {pendingRequest.data.i_req_status == 0 || pendingRequest.data.i_req_status == 1 ? (
                                 <CircleEllipsis strokeWidth={1.3} className='absolute flex items-center p-0 justify-center w-5 h-5 -start-2.5 bg-gray-100 rounded-full text-blue-600  dark:text-gray-400'/>
                             ): 
-                            pendingRequest.data.req_status > 1 && (
+                            pendingRequest.data.i_req_status > 1 && (
                                 <CircleCheck strokeWidth={1.3} className='absolute flex items-center justify-center w-5 h-5 -start-2.5 bg-green-200 rounded-full text-green-600  dark:text-gray-400'/>
                             )}    
                             <p className="font-medium leading-tight text-sm">Hr Staff</p>
@@ -165,10 +164,10 @@ const { data : pendingRequest, isLoading,  refetch : refetchPendingRequest } = u
                         {/*2nd step*/}
                         <li className="mb-10 ms-6">
 
-                            {pendingRequest.data.req_status <= 1 ? (
+                            {pendingRequest.data.i_req_status <= 1 ? (
                                     <CircleX strokeWidth={1.3} className='absolute flex items-center p-0 justify-center w-5 h-5 -start-2.5 bg-gray-100 rounded-full text-red-600  dark:text-gray-400'/>
                                 ): 
-                                pendingRequest.data.req_status > 4 ? (
+                                pendingRequest.data.i_req_status > 4 ? (
                                     <CircleCheck strokeWidth={1.3} className='absolute flex items-center justify-center w-5 h-5 -start-2.5 bg-green-200 rounded-full text-green-600  dark:text-gray-400'/>
                             ): (
                                     <CircleEllipsis strokeWidth={1.3} className='absolute flex items-center p-0 justify-center w-5 h-5 -start-2.5 bg-gray-100 rounded-full text-blue-600  dark:text-gray-400'/>
@@ -179,10 +178,10 @@ const { data : pendingRequest, isLoading,  refetch : refetchPendingRequest } = u
                         </li>
                         {/*3rd step*/}
                         <li className="mb-10 ms-6">
-                        {pendingRequest.data.req_status <= 5 ? (
+                        {pendingRequest.data.i_req_status <= 5 ? (
                                     <CircleX strokeWidth={1.3} className='absolute flex items-center p-0 justify-center w-5 h-5 -start-2.5 bg-gray-100 rounded-full text-red-600  dark:text-gray-400'/>
                                 ): 
-                                pendingRequest.data.req_status > 6 ? (
+                                pendingRequest.data.i_req_status > 6 ? (
                                     <CircleCheck strokeWidth={1.3} className='absolute flex items-center justify-center w-5 h-5 -start-2.5 bg-green-200 rounded-full text-green-600  dark:text-gray-400'/>
                             ): (
                                     <CircleEllipsis strokeWidth={1.3} className='absolute flex items-center p-0 justify-center w-5 h-5 -start-2.5 bg-gray-100 rounded-full text-blue-600  dark:text-gray-400'/>
@@ -192,10 +191,10 @@ const { data : pendingRequest, isLoading,  refetch : refetchPendingRequest } = u
                         </li>
                         {/*4th step*/}
                         <li className="ms-6">
-                            {pendingRequest.data.req_status <= 6 ? (
+                            {pendingRequest.data.i_req_status <= 6 ? (
                                     <CircleX strokeWidth={1.3} className='absolute flex items-center p-0 justify-center w-5 h-5 -start-2.5 bg-gray-100 rounded-full text-red-600  dark:text-gray-400'/>
                                 ): 
-                                pendingRequest.data.req_status > 6 ? (
+                                pendingRequest.data.i_req_status > 6 ? (
                                     <CircleCheck strokeWidth={1.3} className='absolute flex items-center justify-center w-5 h-5 -start-2.5 bg-green-200 rounded-full text-green-600  dark:text-gray-400'/>
                             ): (
                                     <CircleEllipsis strokeWidth={1.3} className='absolute flex items-center p-0 justify-center w-5 h-5 -start-2.5 bg-gray-100 rounded-full text-blue-600  dark:text-gray-400'/>
@@ -208,7 +207,7 @@ const { data : pendingRequest, isLoading,  refetch : refetchPendingRequest } = u
                 </div>
             </div>
      
-            {/* <p>{JSON.stringify(pendingRequest.data.id_no)}</p> */}
+            {/* <p>{JSON.stringify(pendingRequest.data.i_id_no)}</p> */}
         </div>
         ):(
             <p>No Request</p>

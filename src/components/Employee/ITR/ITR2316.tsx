@@ -63,7 +63,7 @@ function ITR2316() {
       const formdata = new FormData();
       formdata.append("data", JSON.stringify(data));
       const response = await axios.post(`${API_SERVER_URL}/Api/add_itr_request`, formdata);
-      console.log("INSERT DATA:", response.data);
+      // console.log("INSERT DATA:", response.data);
       if(response.data.code == 0){
         toast.error('', {
           className: 'my-classname',
@@ -94,7 +94,7 @@ function ITR2316() {
         formdata.append("id", empData.idno);
         // formdata.append("id", 'FQWP');
         const response = await axios.post(`${API_SERVER_URL}/Api/get_user_data`, formdata);
-        console.log("DATA FROM HRMS:", response.data.res.message);
+        // console.log("DATA FROM HRMS:", response.data.res.message);
         return response.data.res.message
     } catch (error) {
         console.error("Error fetching data:", error);
@@ -115,7 +115,7 @@ const { data: empDataFromBackend, isLoading: empDataLoading, refetch: refetchEmp
   /////////////////////////////////
   //USEEFFECT
   useEffect(() => {
-    console.log("EMP DATA:", empData);
+    // console.log("EMP DATA:", empData);
     //alert(empData.idno)
     // if(empData.idno.length > 0){
     //   alert(empData.idno)

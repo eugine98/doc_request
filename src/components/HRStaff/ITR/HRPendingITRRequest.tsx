@@ -77,19 +77,19 @@ import {
 } from "@/components/ui/dialog"
 
 export type PendingITR = {
-  archive: string;
-  date_hired: string;
-  date_requested: string;
-  date_resigned: string;
-  department: string;
-  designation: string;
-  emp_status: string;
-  employee_name: string;
-  id: string;
-  id_no: string;
-  itr_year: string;
-  reason_request: string;
-  req_status: string;
+  i_archive: string;
+  i_date_hired: string;
+  r_date_requested: string;
+  i_date_resigned: string;
+  i_department: string;
+  i_designation: string;
+  i_emp_status: string;
+  i_employee_name: string;
+  i_id: string;
+  i_id_no: string;
+  i_itr_year: string;
+  i_reason_request: string;
+  i_req_status: string;
 };
 
 
@@ -97,39 +97,39 @@ export type PendingITR = {
 export function DataTableDemo() {
   const columns: ColumnDef<PendingITR>[] = [
     {
-      accessorKey: "id_no",
+      accessorKey: "i_id_no",
       header: "Id_no",
-      cell: ({ row }) => <div className="capitalize">{row.getValue("id_no")}</div>,
+      cell: ({ row }) => <div className="capitalize">{row.getValue("i_id_no")}</div>,
     },
     {
-      accessorKey: "employee_name",
+      accessorKey: "i_employee_name",
       header: "Employee_name",
-      cell: ({ row }) => <div className="capitalize">{row.getValue("employee_name")}</div>,
+      cell: ({ row }) => <div className="capitalize">{row.getValue("i_employee_name")}</div>,
     },
     {
-      accessorKey: "date_requested",
+      accessorKey: "r_date_requested",
       header: "Date_requested",
-      cell: ({ row }) => <div className="capitalize">{row.getValue("date_requested")}</div>,
+      cell: ({ row }) => <div className="capitalize">{row.getValue("r_date_requested")}</div>,
     },
     {
-      accessorKey: "department",
+      accessorKey: "i_department",
       header: "Department",
-      cell: ({ row }) => <div className="capitalize">{row.getValue("department")}</div>,
+      cell: ({ row }) => <div className="capitalize">{row.getValue("i_department")}</div>,
     },
     {
-      accessorKey: "designation",
+      accessorKey: "i_designation",
       header: "Designation",
-      cell: ({ row }) => <div className="capitalize">{row.getValue("designation")}</div>,
+      cell: ({ row }) => <div className="capitalize">{row.getValue("i_designation")}</div>,
     },
     {
-      accessorKey: "emp_status",
+      accessorKey: "i_emp_status",
       header: "Emp_status",
-      cell: ({ row }) => <div className="capitalize">{row.getValue("emp_status")}</div>,
+      cell: ({ row }) => <div className="capitalize">{row.getValue("i_emp_status")}</div>,
     },
     {
-      accessorKey: "req_status",
+      accessorKey: "i_req_status",
       header: "Req_Status",
-      cell: ({ row }) => <div className="capitalize">{row.getValue("req_status")}</div>,
+      cell: ({ row }) => <div className="capitalize">{row.getValue("i_req_status")}</div>,
     },
     {
       id: "actions",
@@ -146,11 +146,12 @@ export function DataTableDemo() {
           setIsOpen(false);
         }
   
-        const update_req_status = async (id: string, req_status: string) => {
+        const update_req_status = async (id: string, req_status: string, action: string) => {
           try {
               const formdata = new FormData();
               formdata.append("id", id);
               formdata.append("req_status", req_status);
+              formdata.append("action", action);
               await axios.post(`${API_SERVER_URL}/Api/update_req_status`, formdata);
               //const data = JSON.parse(response.data); // Parse the JSON string into an object
               // console.log("THIS IS PENDING REQUEST", data); // Now this will be "object"
@@ -162,7 +163,7 @@ export function DataTableDemo() {
       };
   
       const update_status = async (id: string, req_status: string, button_type: string) => {
-        await update_req_status(id, req_status);
+        await update_req_status(id, req_status, button_type);
         if(button_type == 'done'){
           setRequestStatus(prevStat => prevStat + 1);
           toast.success('', {
@@ -195,9 +196,9 @@ export function DataTableDemo() {
                     </AlertDialogTitle>
                     <AlertDialogDescription>
                         <div className="">
-                            <p> Name: {employee.employee_name}</p>
-                            <p className=" capitalize"> Employee Status: {employee.emp_status}</p>
-                            <p> Id no: {employee.emp_status == 'active' ? employee.id_no : '----'}</p>
+                            <p> Name: {employee.i_employee_name}</p>
+                            <p className=" capitalize"> Employee Status: {employee.i_emp_status}</p>
+                            <p> Id no: {employee.i_emp_status == 'active' ? employee.i_id_no : '----'}</p>
                           </div>
                     </AlertDialogDescription>
                     <Accordion type="single" collapsible className="w-full">
@@ -224,7 +225,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                // onClick={() => update_status(employee.id, '1', 'done')}
+                                // onClick={() => update_status(employee.i_id, '1', 'done')}
                               >
                                 Reject 
                               </Button>
@@ -237,7 +238,7 @@ export function DataTableDemo() {
                                   </DialogDescription>
                                   <div className="mb-5">
                                     <Label htmlFor="" className="">To:</Label>
-                                    <Input defaultValue={employee.emp_status}/>
+                                    <Input defaultValue={employee.i_emp_status}/>
                                   </div>
                                   <div>
                                     <Label htmlFor="" className="">Reason why rejected:</Label>
@@ -256,7 +257,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '1', 'done')}
+                                onClick={() => update_status(employee.i_id, '1', 'done')}
                               >
                                 Done 
                               </Button>
@@ -268,7 +269,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '0', 'undone')}
+                                onClick={() => update_status(employee.i_id, '0', 'undone')}
                                 >
                                 Undone 
                                 </Button>
@@ -302,7 +303,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '2', 'done')}
+                                onClick={() => update_status(employee.i_id, '2', 'done')}
                               >
                                 Done 
                               </Button>
@@ -314,7 +315,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '1', 'undone')}
+                                onClick={() => update_status(employee.i_id, '1', 'undone')}
                                 >
                                 Undone 
                                 </Button>
@@ -342,7 +343,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '3', 'done')}
+                                onClick={() => update_status(employee.i_id, '3', 'done')}
                               >
                                 Done 
                               </Button>
@@ -354,7 +355,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '2', 'undone')}
+                                onClick={() => update_status(employee.i_id, '2', 'undone')}
                                 >
                                 Undone 
                                 </Button>
@@ -388,7 +389,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '4', 'done')}
+                                onClick={() => update_status(employee.i_id, '4', 'done')}
                               >
                                 Done 
                               </Button>
@@ -400,7 +401,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '3', 'undone')}
+                                onClick={() => update_status(employee.i_id, '3', 'undone')}
                                 >
                                 Undone 
                                 </Button>
@@ -427,7 +428,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '5', 'done')}
+                                onClick={() => update_status(employee.i_id, '5', 'done')}
                               >
                                 Done 
                               </Button>
@@ -439,7 +440,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '4', 'undone')}
+                                onClick={() => update_status(employee.i_id, '4', 'undone')}
                                 >
                                 Undone 
                                 </Button>
@@ -465,7 +466,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '6', 'done')}
+                                onClick={() => update_status(employee.i_id, '6', 'done')}
                               >
                                 Done 
                               </Button>
@@ -477,7 +478,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '5', 'undone')}
+                                onClick={() => update_status(employee.i_id, '5', 'undone')}
                                 >
                                 Undone 
                                 </Button>
@@ -502,7 +503,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '7', 'done')}
+                                onClick={() => update_status(employee.i_id, '7', 'done')}
                               >
                                 Done 
                               </Button>
@@ -514,7 +515,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '6', 'undone')}
+                                onClick={() => update_status(employee.i_id, '6', 'undone')}
                                 >
                                 Undone 
                                 </Button>
@@ -541,19 +542,19 @@ export function DataTableDemo() {
                 <Tooltip>
                   <TooltipTrigger>
                   <div className="bg-orange-600 p-1 rounded-sm hover:cursor-pointer" onClick={() => { openDialog();
-                        if(employee.req_status == 'For Sign(HR Manager)'){
+                        if(employee.i_req_status == 'For Sign(HR Manager)'){
                           setRequestStatus(1)
-                        }else if(employee.req_status == 'Accounting staff processing the ITR/2316'){
+                        }else if(employee.i_req_status == 'Accounting staff processing the ITR/2316'){
                           setRequestStatus(2)
-                        }else if(employee.req_status == 'For Sign(Accounting Manager)'){
+                        }else if(employee.i_req_status == 'For Sign(Accounting Manager)'){
                           setRequestStatus(3)
-                        }else if(employee.req_status == 'Return to HR staff'){
+                        }else if(employee.i_req_status == 'Return to HR staff'){
                           setRequestStatus(4)
-                        }else if(employee.req_status == 'Notif EE'){
+                        }else if(employee.i_req_status == 'Notif EE'){
                           setRequestStatus(5)
-                        }else if(employee.req_status == 'For Claim'){
+                        }else if(employee.i_req_status == 'For Claim'){
                           setRequestStatus(6)
-                        }else if(employee.req_status == 'Done'){
+                        }else if(employee.i_req_status == 'Done'){
                           setRequestStatus(7)
                         }
                       }}>
@@ -571,19 +572,19 @@ export function DataTableDemo() {
                   <Dialog >
                     <DialogTrigger>
                       <div className="bg-orange-600 p-1 rounded-sm hover:cursor-pointer" onClick={() => { openDialog();
-                        if(employee.req_status == 'For Sign(HR Manager)'){
+                        if(employee.i_req_status == 'For Sign(HR Manager)'){
                           setRequestStatus(1)
-                        }else if(employee.req_status == 'Accounting staff processing the ITR/2316'){
+                        }else if(employee.i_req_status == 'Accounting staff processing the ITR/2316'){
                           setRequestStatus(2)
-                        }else if(employee.req_status == 'For Sign(Accounting Manager)'){
+                        }else if(employee.i_req_status == 'For Sign(Accounting Manager)'){
                           setRequestStatus(3)
-                        }else if(employee.req_status == 'Return to HR staff'){
+                        }else if(employee.i_req_status == 'Return to HR staff'){
                           setRequestStatus(4)
-                        }else if(employee.req_status == 'Notif EE'){
+                        }else if(employee.i_req_status == 'Notif EE'){
                           setRequestStatus(5)
-                        }else if(employee.req_status == 'Claimed'){
+                        }else if(employee.i_req_status == 'Claimed'){
                           setRequestStatus(6)
-                        }else if(employee.req_status == 'Done'){
+                        }else if(employee.i_req_status == 'Done'){
                           setRequestStatus(7)
                         }
                       }}>
@@ -595,9 +596,9 @@ export function DataTableDemo() {
                         <DialogTitle>ITR/2316 Request Status</DialogTitle>
                         <DialogDescription>
                           <div className="">
-                            <p> Name: {employee.employee_name}</p>
-                            <p className=" capitalize"> Employee Status: {employee.emp_status}</p>
-                            <p> Id no: {employee.emp_status == 'active' ? employee.id_no : '----'}</p>
+                            <p> Name: {employee.i_employee_name}</p>
+                            <p className=" capitalize"> Employee Status: {employee.i_emp_status}</p>
+                            <p> Id no: {employee.i_emp_status == 'active' ? employee.i_id_no : '----'}</p>
                           </div>
                          
                         </DialogDescription>
@@ -616,7 +617,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '1', 'done')}
+                                onClick={() => update_status(employee.i_id, '1', 'done')}
                               >
                                 Done 
                               </Button>
@@ -628,7 +629,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '0', 'undone')}
+                                onClick={() => update_status(employee.i_id, '0', 'undone')}
                                 >
                                 Undone 
                                 </Button>
@@ -659,7 +660,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '2', 'done')}
+                                onClick={() => update_status(employee.i_id, '2', 'done')}
                               >
                                 Done 
                               </Button>
@@ -671,7 +672,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '1', 'undone')}
+                                onClick={() => update_status(employee.i_id, '1', 'undone')}
                                 >
                                 Undone 
                                 </Button>
@@ -696,7 +697,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '3', 'done')}
+                                onClick={() => update_status(employee.i_id, '3', 'done')}
                               >
                                 Done 
                               </Button>
@@ -708,7 +709,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '2', 'undone')}
+                                onClick={() => update_status(employee.i_id, '2', 'undone')}
                                 >
                                 Undone 
                                 </Button>
@@ -739,7 +740,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '4', 'done')}
+                                onClick={() => update_status(employee.i_id, '4', 'done')}
                               >
                                 Done 
                               </Button>
@@ -751,7 +752,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '3', 'undone')}
+                                onClick={() => update_status(employee.i_id, '3', 'undone')}
                                 >
                                 Undone 
                                 </Button>
@@ -775,7 +776,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '5', 'done')}
+                                onClick={() => update_status(employee.i_id, '5', 'done')}
                               >
                                 Done 
                               </Button>
@@ -787,7 +788,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '4', 'undone')}
+                                onClick={() => update_status(employee.i_id, '4', 'undone')}
                                 >
                                 Undone 
                                 </Button>
@@ -809,7 +810,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '6', 'done')}
+                                onClick={() => update_status(employee.i_id, '6', 'done')}
                               >
                                 Done 
                               </Button>
@@ -821,7 +822,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '5', 'undone')}
+                                onClick={() => update_status(employee.i_id, '5', 'undone')}
                                 >
                                 Undone 
                                 </Button>
@@ -843,7 +844,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '7', 'done')}
+                                onClick={() => update_status(employee.i_id, '7', 'done')}
                               >
                                 Done 
                               </Button>
@@ -855,7 +856,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.id, '6', 'undone')}
+                                onClick={() => update_status(employee.i_id, '6', 'undone')}
                                 >
                                 Undone 
                                 </Button>
@@ -903,7 +904,7 @@ export function DataTableDemo() {
                                   type="date" 
                                   id="date_requested" 
                                   className='mt-1 block w-full border rounded-md p-2'
-                                  value={employee.date_requested}
+                                  value={employee.r_date_requested}
                                 
                               />
                               </div>
@@ -915,30 +916,30 @@ export function DataTableDemo() {
                                   <input 
                                     disabled type="text" id="employee_name" 
                                     className='mt-1 block w-full border rounded-md  p-2' 
-                                    value={employee.employee_name}
+                                    value={employee.i_employee_name}
                                   />
                               </div>
   
   
-                              {employee.emp_status == 'active' && (
+                              {employee.i_emp_status == 'active' && (
                               <div>
                                   <div className='flex justify-between'>
                                       <label htmlFor="department" className="block">Department/Project:</label>
                                   </div>
                                       <input 
                                       disabled type="text" id="department" className='mt-1 block w-full border rounded-md p-2 '
-                                      value={employee.department}
+                                      value={employee.i_department}
                                       />
                                   </div>
                               )}
                               
                             
-                              {employee.emp_status == 'active' && (
+                              {employee.i_emp_status == 'active' && (
                               <div>
                                   <label htmlFor="designation" className="block">Designation:</label>
                                   <input 
                                     disabled type="text" id="designation" className='mt-1 block w-full border rounded-md p-2' 
-                                    value={employee.designation}
+                                    value={employee.i_designation}
                                   />
                               </div>
                               )}
@@ -947,26 +948,26 @@ export function DataTableDemo() {
                                   <label htmlFor="status" className="block">Staus:</label>
                                   <input 
                                     disabled type="text" id="status" className='mt-1 block w-full border rounded-md p-2' 
-                                    value={employee.emp_status}
+                                    value={employee.i_emp_status}
                                   />
                               </div>
                               
-                              {employee.emp_status == 'active' && (
+                              {employee.i_emp_status == 'active' && (
                                 <div>
                                   <label htmlFor="date_hired" className="block">Date Hired:</label>
                                   <input 
                                     disabled type="date" id="date_hired" className='mt-1 block w-full border rounded-md p-2' 
-                                    value={employee.date_hired}
+                                    value={employee.i_date_hired}
                                   />
                                 </div>
                              )}
   
-                            {employee.emp_status != 'active' && (
+                            {employee.i_emp_status != 'active' && (
                                   <div>
                                     <label htmlFor="date_resigned" className="block">Date Resigned:</label>
                                     <input 
                                       disabled type="date" id="date_resigned" className='mt-1 block w-full border rounded-md p-2'
-                                      value={employee.date_resigned}
+                                      value={employee.i_date_resigned}
                                     />
                                 </div>
                              )}
@@ -975,7 +976,7 @@ export function DataTableDemo() {
                                     <label htmlFor="itr_year" className="block">2316 / ITR for the year:</label>
                                     <input 
                                       disabled type="text" id="itr_year" className='mt-1 block w-full border rounded-md p-2' 
-                                      value={employee.itr_year}
+                                      value={employee.i_itr_year}
                                     />
                                   </div>
   
@@ -983,7 +984,7 @@ export function DataTableDemo() {
                                 <label htmlFor="reason_request" className="block">Reason of Request:</label>
                                 <textarea id="reason_request" className='mt-1 block w-full border rounded-md p-2 h-14 ' disabled
                                   
-                                >{employee.reason_request}</textarea>
+                                >{employee.i_reason_request}</textarea>
                             </div>
                             
                           </form> 
@@ -1023,7 +1024,7 @@ export function DataTableDemo() {
         `${API_SERVER_URL}/Api/fetch_pending_itr_for_hr`,
         formdata
       );
-      // console.log("response ini: ", response.data)
+      console.log("response ini: ", response.data)
       setItrData(response.data)
       //return response.data;
     } catch (error) {
