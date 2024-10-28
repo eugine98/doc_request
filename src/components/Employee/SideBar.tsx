@@ -14,7 +14,7 @@ import { useRef } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import axios from 'axios';
 import { API_SERVER_URL } from '@/config';
-import { useQuery } from '@tanstack/react-query';
+// import { useQuery } from '@tanstack/react-query';
 
 import {
    Accordion,
