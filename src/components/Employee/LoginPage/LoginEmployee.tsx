@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { API_SERVER_URL } from "@/config";
-import axios from "axios";
 import { useMutation } from '@tanstack/react-query';
 import useStore from "./store";
 import { MdErrorOutline } from "react-icons/md";
@@ -13,6 +12,7 @@ import { toast } from 'sonner';
 import { Button } from "@/components/ui/button"
 import { IoInformationCircleOutline } from "react-icons/io5";
 import { CgSpinner } from "react-icons/cg";
+import axios, { AxiosError } from 'axios';
 
 interface intEmpDatabase {
     status: string,
@@ -90,6 +90,32 @@ function LoginEmployee() {
             throw error; // Important to throw error to catch it in onError
         }
     };
+    // const user_session = async (myObject: object) => {
+    //     try {
+    //         // const formdata = new FormData();
+    //         // formdata.append("data", JSON.stringify(myObject));
+    //         const response = await axios.get(`${API_SERVER_URL}/Api/user_session`);
+    //         console.log("inuman SESSION: ", response.data)
+    //     } catch (error) {
+    //         console.error("Error fetching data:", error);
+    //         throw error; // Important to throw error to catch it in onError
+    //     }
+    // };
+    // const fetch_user_session = async () => {
+    //     try {
+    //       const response = await axios.get(`${API_SERVER_URL}/Api/fetch_user_session`);
+    //       console.log("HELLO WORLD: ", response.data); // Update state with session data
+    //     } catch (err) {
+    //       const axiosError = err as AxiosError;
+    //       if (axiosError.response?.status === 401) {
+    //         // Handle session expiration (e.g., redirect to login page)
+    //         console.log('Session expired. Please log in again.');
+    //       } else {
+    //         console.log('Failed to fetch session data.');
+    //       }
+    //       console.error('Error fetching session data:', err);
+    //     }
+    //   };
 
     const { mutate, isLoading } = useMutation(login, {
         onSuccess: (data) => {
@@ -144,6 +170,8 @@ function LoginEmployee() {
                       };
                     setEmpData(myObject);
                     navigate("/ITR");
+                    // user_session(myObject);
+                    // fetch_user_session();
                 }
                
             }
@@ -158,6 +186,7 @@ function LoginEmployee() {
     };
 
 
+
 // USE EFFECT
     useEffect(() => {
         if (isLoading) {
@@ -166,6 +195,8 @@ function LoginEmployee() {
     }, [isLoading]);
 
     useEffect(() => {
+        // user_session();
+        // fetch_user_session();
         openDialog();
     }, [])
 
@@ -229,6 +260,8 @@ function LoginEmployee() {
                 picture_location: empDatabase.picture_location,
                 type: 'hr',
               };
+            //   user_session(myObject)
+            //   fetch_user_session();
             setEmpData(myObject);
             navigate("/HR-ITR");
            }else if(loginAs == 'employee'){
@@ -241,6 +274,8 @@ function LoginEmployee() {
                 picture_location: empDatabase.picture_location,
                 type: 'employee',
               };
+            //   user_session(myObject)
+            //   fetch_user_session();
             setEmpData(myObject);
             navigate("/ITR");
         }else if(loginAs == ''){

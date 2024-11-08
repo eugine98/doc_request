@@ -6,6 +6,7 @@ import ITR2316 from "./components/Employee/ITR/ITR2316";
 import LoginEmployee from "./components/Employee/LoginPage/LoginEmployee";
 import HRsideBar from "./components/HRStaff/HRsideBar";
 import HRITR2316 from "./components/HRStaff/ITR/HRITR2316";
+import MonthPay from "./components/Employee/13thMonth/MonthPay";
 import { AppSidebar } from "./components/HRStaff/AppSideBar";
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
       <Route path="/login" element={<LoginEmployee />} />
       <Route path="/COE" element={<COE />} />
       <Route path="/ITR" element={<ITR2316 />} />
+      <Route path="/13Month" element={<MonthPay />} />
     </Routes>
   );
 }

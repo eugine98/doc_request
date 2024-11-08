@@ -58,12 +58,10 @@ function ITR2316() {
 /////////////////////////////////
 //ADDING REQUEST TO DATABASE
   const onSubmit = async (data: FormData) => {
-    // console.log("DATA INI HA:", data)
     try {
       const formdata = new FormData();
       formdata.append("data", JSON.stringify(data));
       const response = await axios.post(`${API_SERVER_URL}/Api/add_itr_request`, formdata);
-      // console.log("INSERT DATA:", response.data);
       if(response.data.code == 0){
         toast.error('', {
           className: 'my-classname',
@@ -219,18 +217,18 @@ useEffect(() => {
               <li 
               className={` pt-3 pb-3 hover:cursor-pointer hover:text-blue-600 ${currentPage == "request_form" && 'border-b-2 border-blue-600 text-blue-600'}`}
               onClick={() => setCurrentPage("request_form")}>
-                  <div className="flex items-center p-2 rounded-lg dark:text-white group">
-                  <GrDocumentText className='w-4 h-4' />
-                  <span className="flex-1 ms-3 whitespace-nowrap group-hover:text-blue-600">Request Form</span>
+                  <div className="flex items-center p-2 rounded-lg dark:text-white group w-40">
+                  <GrDocumentText className='w-3.5 h-3.5' />
+                  <span className="flex-1 ms-1 whitespace-nowrap group-hover:text-blue-600 mt-1.5">ITR Form</span>
                 </div>
               </li>
               <li 
-                 className={`pt-3 pb-3 hover:cursor-pointer hover:text-blue-600 ${currentPage == "pending_request" && 'border-b-2 border-blue-600 text-blue-600'}`}
-              onClick={() => setCurrentPage("pending_request")}>
-                <div className="flex items-center p-2 rounded-lg dark:text-white  group">
-                <GrDocumentText className='w-4 h-4' />
-                <span className="flex-1 ms-3 whitespace-nowrap group-hover:text-blue-600">Pending Request</span>
-              </div>
+                className={`pt-3 pb-3 hover:cursor-pointer hover:text-blue-600 ${currentPage == "pending_request" && 'border-b-2 border-blue-600 text-blue-600'}`}
+                onClick={() => setCurrentPage("pending_request")}>
+                <div className="flex items-center p-2 rounded-lg dark:text-white group w-40">
+                  <GrDocumentText className='w-3.5 h-3.5' />
+                  <span className="flex-1 ms-1 whitespace-nowrap group-hover:text-blue-600 mt-1.5">Pending Request</span>
+                </div>
               </li>
             </ul>
         </div>
@@ -304,6 +302,7 @@ useEffect(() => {
                   </div>
                     <input 
                         required type="text" id="employee_name" 
+                        disabled
                       className={`mt-1 block w-full border rounded-md  p-2 ${errors.employee_name && 'bg-red-100 border-2 border-red-400'}`}
                       {...register("employee_name")}
                     />
