@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import { Button } from "@/components/ui/button"
 import { IoInformationCircleOutline } from "react-icons/io5";
 import { CgSpinner } from "react-icons/cg";
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 
 interface intEmpDatabase {
     status: string,
@@ -77,6 +77,7 @@ function LoginEmployee() {
     const { register, handleSubmit } = useForm<FormData>({ resolver: zodResolver(schema) });
     const [fname, setFname] = useState("")
     const [lname, setLname] = useState("")
+    const [mail, setMail] = useState("")
     const [loginAs, setLoginAs] = useState("")
 
     const login = async (userPass: loginCred) => {
@@ -86,6 +87,12 @@ function LoginEmployee() {
             const response = await axios.post(`${API_SERVER_URL}/Api/login`, formdata);
             return response;
         } catch (error) {
+            toast.error('', {
+                className: 'my-classname',
+                description: 'Error fetching data: ' + error,
+                duration: 2500,
+                icon: <IoInformationCircleOutline className="h-5 w-5" />,
+            });
             console.error("Error fetching data:", error);
             throw error; // Important to throw error to catch it in onError
         }
@@ -167,6 +174,7 @@ function LoginEmployee() {
                         last_name: response.data.res.message.last_name,
                         picture_location: response.data.res.message.picture_location,
                         type: 'employee',
+                        mail: '',
                       };
                     setEmpData(myObject);
                     navigate("/ITR");
@@ -259,6 +267,7 @@ function LoginEmployee() {
                 last_name: empDatabase.last_name,
                 picture_location: empDatabase.picture_location,
                 type: 'hr',
+                mail: '',
               };
             //   user_session(myObject)
             //   fetch_user_session();
@@ -273,6 +282,7 @@ function LoginEmployee() {
                 last_name: empDatabase.last_name,
                 picture_location: empDatabase.picture_location,
                 type: 'employee',
+                mail: '',
               };
             //   user_session(myObject)
             //   fetch_user_session();
@@ -297,6 +307,7 @@ function LoginEmployee() {
             last_name: lname,
             picture_location: 'http://idcsi-officesuites.com:8080/hrms/elfinder/files/.profile_pic/FPZG_1684815634.jpg',
             type: 'employee',
+            mail: mail,
         };
         setEmpData(myObject);
         setIsOpen(false);
@@ -337,18 +348,28 @@ function LoginEmployee() {
                                     </div>
                                         <input 
                                             required type="text" id="fnmae" className='mt-1 block w-full border rounded-md p-2'
-                                        onChange={(e) => setFname(e.target.value)}
+                                            onChange={(e) => setFname(e.target.value)}
                                         />
                                         
                                 </div>
                             
-                                <div>
+                                <div className="mb-5">
                                 <div className='flex justify-between'>
                                     <label htmlFor="lname" className="block">Last Name</label>
                                 </div>
                                     <input 
                                         required type="text" id="lname" className='mt-1 block w-full border rounded-md p-2'
                                         onChange={(e) => setLname(e.target.value)}
+                                    />
+                                    
+                                </div>
+                                <div>
+                                <div className='flex justify-between'>
+                                    <label htmlFor="mail" className="block">Email:</label>
+                                </div>
+                                    <input 
+                                        required type="email" id="mail" className='mt-1 block w-full border rounded-md p-2'
+                                        onChange={(e) => setMail(e.target.value)}
                                     />
                                     
                                 </div>

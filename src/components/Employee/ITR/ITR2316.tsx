@@ -16,6 +16,7 @@ import { toast } from 'sonner';
 import { FaRegCheckCircle } from "react-icons/fa";
 import { MdErrorOutline } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
+import { Menu, NotebookPen } from 'lucide-react';
 // import { Bell } from 'lucide-react';
 
 const schema = z.object({
@@ -35,6 +36,7 @@ const schema = z.object({
   date_resigned: z.string().optional(),
   itr_year: z.string().min(1, { message: "required." }),
   reason_request: z.string().min(1, { message: "required." }),
+  mail: z.string().optional(),
 })
 type FormData = z.infer<typeof schema>
 
@@ -49,6 +51,21 @@ function ITR2316() {
     setValue 
   } = useForm<FormData>({resolver: zodResolver(schema),
   });
+  //const [mail, set_mail] = useState("");
+  const getMail = async (empID : string) => {
+    try {
+      const formdata = new FormData();
+      formdata.append("idno", empID);
+      const response = await axios.post(`${API_SERVER_URL}/Api/getMail`, formdata);
+      //set_mail(response.data.res.message.other_email)
+      setValue('mail', response.data.res.message.other_email)
+      //console.log("response data for email: ", response.data.res.message.other_email)
+      // return response.data.res.message.other_email
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        throw error; // Important to throw error to catch it in onError
+    }
+  }
   
 //USESTATE
   const navigate = useNavigate()
@@ -72,7 +89,7 @@ function ITR2316() {
       }else{
         toast.success('', {
           className: 'my-classname',
-          description: response.data.msg,
+          description: "Your request for ITR has been successfully submitted.",
           duration: 2500,
           icon: <FaRegCheckCircle className="h-5 w-5" />,
         });
@@ -99,7 +116,7 @@ function ITR2316() {
         throw error; // Important to throw error to catch it in onError
     }
 };
-const { data: empDataFromBackend, isLoading: empDataLoading, refetch: refetchEmpData } = useQuery ({
+  const { data: empDataFromBackend, isLoading: empDataLoading, refetch: refetchEmpData } = useQuery ({
     queryKey: ['empData'],
     queryFn: () => get_user_data(),
     staleTime: 10 * 1000,
@@ -111,19 +128,6 @@ const { data: empDataFromBackend, isLoading: empDataLoading, refetch: refetchEmp
     // refetchIntervalInBackground: true,
   });
   /////////////////////////////////
-  //USEEFFECT
-  useEffect(() => {
-    // console.log("EMP DATA:", empData);
-    //alert(empData.idno)
-    // if(empData.idno.length > 0){
-    //   alert(empData.idno)
-    //   setShowLoader(true);
-    //   refetchEmpData();
-    // }else{
-    //   navigate('/login');
-    // }
-}, [empData]);
-
 useEffect(() => {
   const timer = setTimeout(() => {
     if (empData && Object.keys(empData).length > 0) {
@@ -153,6 +157,7 @@ useEffect(() => {
       if(empDataFromBackend.first_name != undefined){
         const today = new Date();
         const formattedDate = today.toISOString().split('T')[0];
+        getMail(empDataFromBackend.idno)
         setValue("id_no", empDataFromBackend.idno);
         setValue("date_requested", formattedDate);
         setValue("employee_name", `${empDataFromBackend.first_name} ${empDataFromBackend.last_name}`);
@@ -161,11 +166,12 @@ useEffect(() => {
         setValue("emp_status", empData.status)
         setValue("date_resigned", '')
         setValue("date_hired", empDataFromBackend.joined_date)
+
         setShowLoader(false)
       }else{
-        // alert(empData.status)
         if(empData.status == 'active'){
           refetchEmpData()
+          getMail(empDataFromBackend.idno)
         }else if(empData.status == 'resigned'){
           const today = new Date();
           const formattedDate = today.toISOString().split('T')[0];
@@ -177,6 +183,7 @@ useEffect(() => {
           setValue("emp_status", empData.status)
           setValue("date_resigned", '')
           setValue("date_hired", '')
+          setValue('mail', empData.mail)
           setShowLoader(false)
         }
       }
@@ -196,38 +203,39 @@ useEffect(() => {
         <SideBar />
     </div>
     
-    <div className="relative sm:ml-56 bg-white mt-6 ">
-      <div className="absolute w-full h-5 ">
-      {/* <div className=" w-full h-6 bg-white fixed top-0">
-
-      </div> */}
-      </div>
+    <div className="relative sm:ml-52 bg-white">
       <div className="absolute w-full h-5 z-20">
-        <div className='fixed top-0 border-l-0 border border-gray-200 w-full'>
-        <motion.p className="font-bold text-2xl w-full bg-white p-4 flex justify-end sm:justify-start border-b border-gray-200 "
+        <div className='fixed top-0 border-l border border-gray-200 w-full '>
+          <div className='flex border-b border-gray-200 bg-white'>
+          
+          <Menu size={30} className='ms-3 mt-2.5 mr-1 sm:hidden bg-gray-200 rounded-sm p-0.5 hover:cursor-pointer hover:text-blue-800'/>
+          <NotebookPen size={25} className='ms-3 mt-2.5 mr-1 hidden sm:block'/>
+          <motion.p className="font-bold text-2xl w-full bg-white p-2 pl-0.5 flex justify-end sm:justify-start "
           style={{ fontFamily: "Nunito, sans-serif"}}
         >
           ITR/2316
         </motion.p>
-      <div className=' w-full bg-white ms-4'>
+          </div>
+       
+      <div className=' w-full bg-white'>
         <div>
-            <ul className='flex space-x-10 text-sm font-semibold '
-             style={{ fontFamily: "Nunito, sans-serif"}}
+            <ul className='flex text-sm font-medium'
+           style={{fontFamily: "Poppins, sans-serif"}}
             >
               <li 
-              className={` pt-3 pb-3 hover:cursor-pointer hover:text-blue-600 ${currentPage == "request_form" && 'border-b-2 border-blue-600 text-blue-600'}`}
+              className={` pt-1 pb-1 hover:bg-gray-200 text-xs hover:cursor-pointer  ${currentPage == "request_form" && 'border-b-2 border-blue-600 text-blue-600'}`}
               onClick={() => setCurrentPage("request_form")}>
                   <div className="flex items-center p-2 rounded-lg dark:text-white group w-40">
                   <GrDocumentText className='w-3.5 h-3.5' />
-                  <span className="flex-1 ms-1 whitespace-nowrap group-hover:text-blue-600 mt-1.5">ITR Form</span>
+                  <span className="flex-1 ms-1 whitespace-nowrap mt-1.5">ITR Form</span>
                 </div>
               </li>
               <li 
-                className={`pt-3 pb-3 hover:cursor-pointer hover:text-blue-600 ${currentPage == "pending_request" && 'border-b-2 border-blue-600 text-blue-600'}`}
+                className={`pt-1 pb-1 hover:bg-gray-200 text-xs hover:cursor-pointer  ${currentPage == "pending_request" && 'border-b-2 border-blue-600 text-blue-600'}`}
                 onClick={() => setCurrentPage("pending_request")}>
                 <div className="flex items-center p-2 rounded-lg dark:text-white group w-40">
                   <GrDocumentText className='w-3.5 h-3.5' />
-                  <span className="flex-1 ms-1 whitespace-nowrap group-hover:text-blue-600 mt-1.5">Pending Request</span>
+                  <span className="flex-1 ms-1 whitespace-nowrap mt-1.5">Pending Request</span>
                 </div>
               </li>
             </ul>
@@ -237,9 +245,13 @@ useEffect(() => {
         
       </div>
        
-        <div className="w-full pt-24 p-5">
+        <div className="w-full pt-24">
         {currentPage == "request_form" ? (
-          <div className=" rounded-lg bg-white p-5">
+          <div className=" rounded-lg p-5"
+          style={{
+            background: 'linear-gradient(0deg, rgba(255, 253, 253, 1) 25%, rgba(240, 240, 240, 1) 100%)',
+          }} 
+          >
           <div className='flex justify-center'>
             <div className=' bg-white lg:w-3/4 lg:min-w-3/4 w-full'>
             <table className='border border-gray-200 text-center w-full text-gray-700 text-xs font-bold'
@@ -272,7 +284,7 @@ useEffect(() => {
           <div className=" w-full flex justify-center">
           <div className="pt-2 lg:w-3/4 lg:min-w-3/4 w-full">
           {/* form */}
-            <form className="p-6 space-y-4 bg-white rounded shadow-md text-gray-700 text-xs font-medium" onSubmit={handleSubmit(onSubmit)}
+            <form className="p-6 space-y-4 bg-white rounded shadow-md text-gray-700 text-[0.63rem] font-semibold" onSubmit={handleSubmit(onSubmit)}
             style={{fontFamily: "Poppins, sans-serif"}}
             >
                 <div>
@@ -282,6 +294,7 @@ useEffect(() => {
                 <input
                     required 
                     type="date" 
+                    disabled
                     id="date_requested" 
                     className={`mt-1 block w-full border rounded-md p-2 ${errors.date_requested && 'bg-red-100 border-2 border-red-400'}`}
                     //value={currentDate}
@@ -315,7 +328,7 @@ useEffect(() => {
                     <label htmlFor="department" className="block">Department/Project:</label>
                   </div>
                     <input 
-                        required type="text" id="department" className={`mt-1 block w-full border rounded-md p-2 ${errors.department && 'bg-red-100 border-2 border-red-400'}`}
+                        required type="text" id="department" disabled className={`mt-1 block w-full border rounded-md p-2 ${errors.department && 'bg-red-100 border-2 border-red-400'}`}
                      {...register("department")}
                     />
                     
@@ -326,6 +339,7 @@ useEffect(() => {
                   <div>
                     <label htmlFor="designation" className="block">Designation:</label>
                     <input 
+                    disabled
                         required type="text" id="designation" className={`mt-1 block w-full border rounded-md p-2 ${errors.designation && 'bg-red-100 border-2 border-red-400'}`}
                         {...register("designation")}
                     />
@@ -356,6 +370,7 @@ useEffect(() => {
                     <div>
                       <label htmlFor="date_hired" className="block">Date Hired:</label>
                       <input 
+                      disabled
                           required type="date" id="date_hired" className={`mt-1 block w-full border rounded-md p-2 ${errors.date_hired && 'bg-red-100 border-2 border-red-400'}`}
                         {...register("date_hired")}
                       />
@@ -403,7 +418,7 @@ useEffect(() => {
           </div>
         ):
         (
-          <div className=" rounded-lg bg-white p-5">
+          <div className=" rounded-lg bg-white">
             <ITRPendingRequest/>
           </div>
         )}

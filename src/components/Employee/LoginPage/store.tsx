@@ -234,6 +234,7 @@ interface EmployeeData {
     last_name: string;
     picture_location: string;
     type: string;
+    mail: string;
 }
 
 // Define the store state type
@@ -286,6 +287,7 @@ const getData = async (): Promise<EmployeeData> => {
                 last_name: '',
                 picture_location: '',
                 type: '',
+                mail: '',
             });
         };
     });
@@ -309,6 +311,7 @@ const useStore = create<EmpDataStore>((set) => ({
         last_name: '',
         picture_location: '',
         type: '',
+        mail: '',
     }, // Initial state (can be overridden once data is loaded)
     setEmpData: async (data) => {
         await saveData(data); // Save to IndexedDB
@@ -316,7 +319,7 @@ const useStore = create<EmpDataStore>((set) => ({
     },
     deleteEmpData: async () => {
         await deleteData(); // Remove from IndexedDB
-        set({ empData: { status: '', first_name: '', idno: '', job_job_title: '', last_name: '', picture_location: '', type: '', } }); // Reset state
+        set({ empData: { status: '', first_name: '', idno: '', job_job_title: '', last_name: '', picture_location: '', type: '', mail: '', } }); // Reset state
     },
 }));
 

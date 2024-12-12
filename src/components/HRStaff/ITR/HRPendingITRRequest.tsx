@@ -17,11 +17,12 @@ import { ChevronDown } from "lucide-react";
 import { IoEye } from "react-icons/io5";
 import { MdEdit, MdErrorOutline } from "react-icons/md";
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+// import { useQuery } from "@tanstack/react-query";
 import { API_SERVER_URL } from "@/config";
 import { Button } from "@/components/ui/button";
 import { toast } from 'sonner';
 import { X } from 'lucide-react';
+import useStore from "@/components/Employee/LoginPage/store";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -34,13 +35,13 @@ import {
 import {
   AlertDialog,
   AlertDialogAction,
-  // AlertDialogCancel,
+   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
+  // AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import {
   Accordion,
@@ -91,16 +92,18 @@ export type PendingITR = {
   i_itr_year: string;
   i_reason_request: string;
   i_req_status: string;
+  r_mail: string;
 };
 
 
 
 export function DataTableDemo() {
+  const {empData} = useStore();
   const columns: ColumnDef<PendingITR>[] = [
     {
       accessorKey: "i_id_no",
       header: "Id_no",
-      cell: ({ row }) => <div className="capitalize">{row.getValue("i_id_no")}</div>,
+      cell: ({ row }) => <div className="capitalize">{row.getValue("i_id_no") != "" ? row.getValue("i_id_no") : "-"}</div>,
     },
     {
       accessorKey: "i_employee_name",
@@ -115,12 +118,12 @@ export function DataTableDemo() {
     {
       accessorKey: "i_department",
       header: "Department",
-      cell: ({ row }) => <div className="capitalize">{row.getValue("i_department")}</div>,
+      cell: ({ row }) => <div className="capitalize">{row.getValue("i_department") != "" ? row.getValue("i_department") : "-"}</div>,
     },
     {
       accessorKey: "i_designation",
       header: "Designation",
-      cell: ({ row }) => <div className="capitalize">{row.getValue("i_designation")}</div>,
+      cell: ({ row }) => <div className="capitalize">{row.getValue("i_designation") != "" ? row.getValue("i_designation") : "-"}</div>,
     },
     {
       accessorKey: "i_emp_status",
@@ -140,14 +143,49 @@ export function DataTableDemo() {
         const employee = row.original;
         const [requestStatus, setRequestStatus] = useState(0)
         const [isOpen, setIsOpen] = useState(false);
-        const openDialog = () => setIsOpen(true);
+        const openDialog = () => {
+          set_mail(employee.r_mail)
+          //getMail(empID)
+          setIsOpen(true);
+        }
         const closeDialog = async () => {
-          await refetchCount();
+          requestStatus == 8 && await update_req_status(employee.i_req_id, employee.i_id, "", "", "", 'true')
+          set_mail("");
+          await     fetch_count_pending_itr_for_hr()
           await fetch_pending_itr_for_hr();
           setIsOpen(false);
         }
+        const [isOpenRejectConfirm, setIsOpenRejectConfirm] = useState(false);
+        const [req_id, setReqId] = useState("");
+        const [id, setId] = useState("");
+        const [receiptName, setReceiptName] = useState("");
+        const confirmRejection = async (req_id: string, id: string, receiptName: string) => {
+          if(rejection_reason != "" && mail != "" && mail != undefined ){
+            setReqId(req_id)
+            setId(id)
+            setReceiptName(receiptName)
+            setIsOpenRejectConfirm(true);
+          }else{
+            if(rejection_reason == ""){
+              toast.error('', {
+                className: 'my-classname',
+                description: 'No reason was provided. Please enter one.',
+                duration: 2000,
+                icon: <MdErrorOutline className="h-5 w-5" />,
+              });
+            }else if(mail == ""){
+              toast.error('', {
+                className: 'my-classname',
+                description: 'No email was provided. Please enter one.',
+                duration: 2000,
+                icon: <MdErrorOutline className="h-5 w-5" />,
+              });
+            }
+         
+        }
+        }
   
-        const update_req_status = async (req_id: string, id: string, req_status: string, action: string, doc_type: string) => {
+        const update_req_status = async (req_id: string, id: string, req_status: string, action: string, doc_type: string, update_archive: string) => {
           try {
               const formdata = new FormData();
               formdata.append("id", id);
@@ -155,6 +193,7 @@ export function DataTableDemo() {
               formdata.append("req_status", req_status);
               formdata.append("doc_type", doc_type);
               formdata.append("action", action);
+              formdata.append("update_archive", update_archive)
               await axios.post(`${API_SERVER_URL}/Api/update_req_status`, formdata);
               //const data = JSON.parse(response.data); // Parse the JSON string into an object
               // console.log("THIS IS PENDING REQUEST", data); // Now this will be "object"
@@ -165,9 +204,123 @@ export function DataTableDemo() {
           }
       };
   
-      const update_status = async (req_id: string, id: string, req_status: string, button_type: string, doc_type: string) => {
-        await update_req_status(req_id, id, req_status, button_type, doc_type);
-        if(button_type == 'done'){
+      const [reqID, setReqID] = useState("");
+      const [ID, setID] = useState("");
+      const [reqStatus, setReqStatus] = useState("");
+      const [buttonType, setButtonType] = useState("");
+      const [docType, setDocType] = useState("");
+      const update_status = async (req_id: string, id: string, req_status: string, button_type: string, doc_type: string, receiptName: string) => {
+        setReqID(req_id)
+        setID(id)
+        setReqStatus(req_status)
+        setButtonType(button_type)
+        setDocType(doc_type)
+        setReceiptName(receiptName)
+        setConfirmUpdate(true)
+      }
+      const [rejection_reason, set_rejection_reason] = useState("");
+      const [mail, set_mail] = useState("");
+
+      // const getMail = async (empID : string) => {
+      //   if(mail == ""){
+      //     try {
+      //       const formdata = new FormData();
+      //       formdata.append("idno", empID);
+      //       const response = await axios.post(`${API_SERVER_URL}/Api/getMail`, formdata);
+      //       set_mail(response.data.res.message.other_email)
+      //       //console.log("response data: email:  ", employee.r_mail)
+      //       //set_mail(employee.r_mail)
+      //     } catch (error) {
+      //         console.error("Error fetching data:", error);
+      //         throw error; // Important to throw error to catch it in onError
+      //     }
+      //   }
+      // }
+      const reject_request = async (req_id: string, id: string, receiptName: string) => {
+        if(rejection_reason != "" && mail != "" && mail != undefined ){
+            try {
+              const formdata = new FormData();
+              formdata.append("req_id", req_id);
+              formdata.append("id", id);
+              formdata.append("reason_for_reject", rejection_reason);
+              formdata.append("table_type", "ITR");
+              await axios.post(`${API_SERVER_URL}/Api/reject_request`, formdata);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                throw error; // Important to throw error to catch it in onError
+            }
+          
+            fetch_count_pending_itr_for_hr()
+            fetch_pending_itr_for_hr();
+            send_email(receiptName);
+            toast.success('', {
+              className: 'my-classname',
+              description: 'Message sent!',
+              duration: 2000,
+              icon: <MdErrorOutline className="h-5 w-5" />,
+            });
+        }else{
+          if(rejection_reason == ""){
+            toast.error('', {
+              className: 'my-classname',
+              description: 'No reason was provided. Please enter one.',
+              duration: 2000,
+              icon: <MdErrorOutline className="h-5 w-5" />,
+            });
+          }else if(mail == "" && mail != undefined ){
+            toast.error('', {
+              className: 'my-classname',
+              description: 'No email was provided. Please enter one.',
+              duration: 2000,
+              icon: <MdErrorOutline className="h-5 w-5" />,
+            });
+          }
+        }
+      }
+      const send_email = async (receiptName: string) => {
+        try {
+            const formdata = new FormData();
+            formdata.append("header", "ITR Rejection Notice");
+            formdata.append("doc_type", 'ITR');
+            formdata.append("reason", rejection_reason);
+            formdata.append("receiptEmailAdd", mail);
+            formdata.append("sender", empData.first_name);
+            formdata.append("receiptName", receiptName);
+            const response = await axios.post(
+              `${API_SERVER_URL}/Email/send_email`,
+              formdata
+            );
+            console.log(response.data)
+          } catch (error) {   
+            console.error("Error fetching data:", error);
+          }
+      };
+      const for_claim_email = async (receiptName: string) => {
+        // alert(mail)
+        try {
+            const formdata = new FormData();
+            formdata.append("header", "ITR For Claim");
+            formdata.append("doc_type", 'ITR');
+            formdata.append("receiptEmailAdd", mail);
+            formdata.append("sender", empData.first_name);
+            formdata.append("receiptName", receiptName);
+            const response = await axios.post(
+              `${API_SERVER_URL}/Email/for_claim_email`,
+              formdata
+            );
+            console.log(response.data)
+          } catch (error) {   
+            console.error("Error fetching data:", error);
+          }
+      };
+      const [confirmUpdate, setConfirmUpdate] = useState(false);
+      const confirm = async (receiptName: string) => {
+        await update_req_status(reqID, ID, reqStatus, buttonType, docType, 'false');
+        if(buttonType == 'done'){
+          if(reqStatus == "7"){
+            for_claim_email(receiptName)
+          }
+
           setRequestStatus(prevStat => prevStat + 1);
           toast.success('', {
             className: 'my-classname',
@@ -180,59 +333,31 @@ export function DataTableDemo() {
         }else{
           setRequestStatus(prevStat => prevStat - 1);
         }
+        setReqID("")
+        setID("")
+        setReqStatus("")
+        setButtonType("")
+        setDocType("")
       }
-      const [rejection_reason, set_rejection_reason] = useState("");
-
-      const reject_request = async (req_id: string, id: string) => {
-        if(rejection_reason != ""){
-            try {
-              // alert(req_id + "-" + id + "-" + rejection_reason)
-              const formdata = new FormData();
-              formdata.append("req_id", req_id);
-              formdata.append("id", id);
-              formdata.append("reason_for_reject", rejection_reason);
-              await axios.post(`${API_SERVER_URL}/Api/reject_request`, formdata);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-                throw error; // Important to throw error to catch it in onError
-            }
-          
-            refetchCount();
-            fetch_pending_itr_for_hr();
-            send_email();
-            toast.success('', {
-              className: 'my-classname',
-              description: 'Message sent!',
-              duration: 2000,
-              icon: <MdErrorOutline className="h-5 w-5" />,
-            });
-        }else{
-          toast.error('', {
-            className: 'my-classname',
-            description: 'No reason was provided. Please enter one.',
-            duration: 2000,
-            icon: <MdErrorOutline className="h-5 w-5" />,
-          });
-        }
-      }
-      const send_email = async () => {
-        //console.log($data)
-        try {
-            const formdata = new FormData();
-            formdata.append("reason", rejection_reason);
-            formdata.append("doc_type", 'ITR');
-            const response = await axios.post(
-              `${API_SERVER_URL}/Email/send_email`,
-              formdata
-            );
-          } catch (error) {   
-            console.error("Error fetching data:", error);
-          }
-      };
-
         return (
           <>
-            <div>
+        <div>
+          <AlertDialog open={confirmUpdate} onOpenChange={setConfirmUpdate}>
+            <AlertDialogContent className='w-96'>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Marked this task {buttonType}?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  {/* Task: For Validate! */}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel  className="h-8">No</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => confirm(receiptName)}  className="h-8">Yes</AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+        <div>
             <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
                 <AlertDialogContent className='w-1/2 '>
                 <AlertDialogHeader>
@@ -246,13 +371,13 @@ export function DataTableDemo() {
                     <AlertDialogDescription>
                         <div className="">
                             <p> Name: {employee.i_employee_name}</p>
-                            <p className=" capitalize"> Employee Status: {employee.i_emp_status}</p>
-                            <p> Id no: {employee.i_emp_status == 'active' ? employee.i_id_no : '----'}</p>
+                            <p className="capitalize">Status: {employee.i_emp_status}</p>
+                            <p> Id no: {employee.i_emp_status == 'active' ? employee.i_id_no : '####'}</p>
                           </div>
                     </AlertDialogDescription>
-                    <Accordion type="single" collapsible className="w-full">
+                    <Accordion type="single" collapsible className="w-full ">
                         <AccordionItem value="item-1">
-                          <AccordionTrigger className={` ${requestStatus > 0 ? 'text-green-600' : 'text-red-600'}`}>For validate</AccordionTrigger>
+                          <AccordionTrigger className={` ${requestStatus > 0 ? 'text-green-600 text-[0.8rem] pt-3 pb-3' : 'text-red-600 text-[0.8rem] pt-3 pb-3'}`}>Hr Staff to validate the request form</AccordionTrigger>
                           <AccordionContent>
                           <div>
                             {requestStatus > 0 ? (
@@ -268,51 +393,14 @@ export function DataTableDemo() {
                             
                             {requestStatus == 0 && (
                               <div className="w-full space-x-1 flex justify-end">
-                                {/* <AlertDialog>
-                                  <AlertDialogTrigger>
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                    // onClick={() => update_status(employee.i_req_id, employee.i_id, '1', 'done')}
-                                  >
-                                    Reject 
-                                  </Button>
-                                  </AlertDialogTrigger>
-                                  <AlertDialogContent>
-                                    <AlertDialogHeader>
-                                      <AlertDialogTitle>
-                                      <div className="flex justify-between">
-                                        <p>Are you sure?</p>
-                                        <div className=""><X className="p-1 text-gray-600 hover:text-gray-900  rounded-sm hover:cursor-pointer" onClick={() => closeDialog()} /></div>
-                                      </div>
-                                      </AlertDialogTitle>
-                                      <AlertDialogDescription>
-                                      Once you send this message, request will be rejected!
-                                      </AlertDialogDescription>
-                                      <div className="mb-5">
-                                    <Label htmlFor="" className="">To:</Label>
-                                    <Input defaultValue={employee.i_employee_name}/>
-                                    </div>
-                                    <div>
-                                    <Label htmlFor="" className="">Reason:</Label>
-                                    <Textarea id="rejection_reason" rows={6} onChange={(e) => set_rejection_reason(e.target.value)}/>
-                                  </div>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                      {/* <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                      {/* <AlertDialogAction>Send</AlertDialogAction>  
-                                      <Button type="submit" className="mt-5" onClick={() => reject_request()}>Send</Button>
-                                    </AlertDialogFooter>
-                                  </AlertDialogContent>
-                                </AlertDialog> */}
+                               
                              <Dialog>
                               <DialogTrigger>
                               <Button
                                 variant="outline"
                                 size="sm"
                                 className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                // onClick={() => update_status(employee.i_req_id, employee.i_id, '1', 'done')}
+                                // onClick={() => getMail()}
                               >
                                 Reject 
                               </Button>
@@ -325,24 +413,33 @@ export function DataTableDemo() {
                                   </DialogDescription>
                                   <div className="mb-5">
                                     <Label htmlFor="" className="">To:</Label>
-                                    <Input defaultValue={employee.i_employee_name}/>
+                                    <Input required type="email" defaultValue={employee.r_mail} placeholder="test@gmail.com" onChange={(e) => set_mail(e.target.value)}/>
                                   </div>
                                   <div>
                                     <Label htmlFor="" className="">Reason:</Label>
-                                    <Textarea id="rejection_reason" rows={6} onChange={(e) => set_rejection_reason(e.target.value)}/>
+                                    <Textarea required id="rejection_reason" rows={6} onChange={(e) => set_rejection_reason(e.target.value)}/>
                                   </div>
                                
                                 </DialogHeader>
                                  <DialogFooter>
-                                 <Button type="submit" className="mt-5" onClick={() => reject_request(employee.i_req_id, employee.i_id)}>Send</Button>
+                                  <div className="flex justify-between mt-5 w-full">
+                                  <p className="flex justify-start text-xs mt-3 text-red-600">*Check the email before sending, as it may be incomplete.</p>
+                                 <Button type="submit" className="" 
+                                 onClick={() => 
+                                  confirmRejection(employee.i_req_id, employee.i_id, employee.i_employee_name)
+                                }
+                                >Send</Button>
+                                  </div>
+                               
                                 </DialogFooter>
                               </DialogContent>
+                          
                             </Dialog>
                               <Button
                                 variant="outline"
                                 size="sm"
                                 className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '1', 'done', 'ITR')}
+                                onClick={() => update_status(employee.i_req_id, employee.i_id, '1', 'done', 'ITR', '')}
                               >
                                 Done 
                               </Button>
@@ -354,7 +451,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '0', 'undone', 'ITR')}
+                                onClick={() => update_status(employee.i_req_id, employee.i_id, '0', 'undone', 'ITR', '')}
                                 >
                                 Undone 
                                 </Button>
@@ -365,13 +462,14 @@ export function DataTableDemo() {
                           </AccordionContent>
                         </AccordionItem>
                         <AccordionItem value="item-2">
-                          <AccordionTrigger className={`  ${requestStatus > 1 ? 'text-green-600' : 'text-red-600'}`}>
-                              <div className="flex justify-start">
+                          <AccordionTrigger className={`  ${requestStatus > 1 ? 'text-green-600 text-[0.8rem] pt-3 pb-3' : 'text-red-600 text-[0.8rem] pt-3 pb-3'}`}>
+                          Hr Staff to submit the request form to the HR Manager for her sign
+                              {/* <div className="flex justify-start">
                                 <p>
                                 For Sign
                                 </p>
                                <span className="text-[0.7rem] ms-2">(HR Manageer)</span>
-                              </div>
+                              </div> */}
                             </AccordionTrigger>
                           <AccordionContent>
                            <div>
@@ -379,7 +477,7 @@ export function DataTableDemo() {
                               {requestStatus > 1 ? (
                                     <p>Done!</p>
                                   ):(
-                                    <p className="font-medium text-xs">Click 'Done' if the form is signed by the HR Manager.</p>
+                                    requestStatus == 1 ? <p className="font-medium text-xs">Click 'Done' if the form is signed by the HR Manager.</p> : <p className="font-medium text-xs">Undone!</p>
                                   )}
                               </div>
                             {requestStatus == 1 && (
@@ -388,7 +486,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '2', 'done', 'ITR')}
+                                onClick={() => update_status(employee.i_req_id, employee.i_id, '2', 'done', 'ITR', '')}
                               >
                                 Done 
                               </Button>
@@ -400,7 +498,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '1', 'undone', 'ITR')}
+                                onClick={() => update_status(employee.i_req_id, employee.i_id, '1', 'undone', 'ITR', '')}
                                 >
                                 Undone 
                                 </Button>
@@ -411,15 +509,23 @@ export function DataTableDemo() {
                            </div>
                           </AccordionContent>
                         </AccordionItem>
-                        <AccordionItem value="item-3">
-                          <AccordionTrigger className={`  ${requestStatus > 2 ? 'text-green-600' : 'text-red-600'}`}>Accounting staff processing the ITR/2316.</AccordionTrigger>
+                        <AccordionItem value="item-2.0">
+                          <AccordionTrigger className={`  ${requestStatus > 2 ? 'text-green-600 text-[0.8rem] pt-3 pb-3' : 'text-red-600 text-[0.8rem] pt-3 pb-3'}`}>
+                          Hr Staff will transmit the signed request form to Accounting Staff
+                              {/* <div className="flex justify-start">
+                                <p>
+                                For Sign
+                                </p>
+                               <span className="text-[0.7rem] ms-2">(HR Manageer)</span>
+                              </div> */}
+                            </AccordionTrigger>
                           <AccordionContent>
-                          <div>
-                          <div>
+                           <div>
+                              <div>
                               {requestStatus > 2 ? (
                                     <p>Done!</p>
                                   ):(
-                                    <p className="font-medium text-xs">Click 'Done' if the ITR is processed by the accounting staff.</p>
+                                    requestStatus == 2 ? <p className="font-medium text-xs">Click 'Done' if the form is signed by the HR Manager.</p> : <p className="font-medium text-xs">Undone!</p>
                                   )}
                               </div>
                             {requestStatus == 2 && (
@@ -428,7 +534,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '3', 'done', 'ITR')}
+                                onClick={() => update_status(employee.i_req_id, employee.i_id, '3', 'done', 'ITR', '')}
                               >
                                 Done 
                               </Button>
@@ -440,32 +546,27 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '2', 'undone', 'ITR')}
+                                onClick={() => update_status(employee.i_req_id, employee.i_id, '2', 'undone', 'ITR', '')}
                                 >
                                 Undone 
                                 </Button>
                               </div>
                               )}
                            
+                           
                            </div>
                           </AccordionContent>
                         </AccordionItem>
-                        <AccordionItem value="item-4">
-                          <AccordionTrigger className={`  ${requestStatus > 3 ? 'text-green-600' : 'text-red-600'}`}>
-                          <div className="flex justify-start">
-                                <p>
-                                For Sign
-                                </p>
-                               <span className="text-[0.7rem] ms-2">(Accounting Manager)</span>
-                              </div>
-                          </AccordionTrigger>
+                        <AccordionItem value="item-3">
+                          <AccordionTrigger className={`  ${requestStatus > 3 ? 'text-green-600 text-[0.8rem] pt-3 pb-3' : 'text-red-600 text-[0.8rem] pt-3 pb-3'}`}>Accounting Staff will process the ITR/2316.</AccordionTrigger>
                           <AccordionContent>
                           <div>
                           <div>
                               {requestStatus > 3 ? (
                                     <p>Done!</p>
                                   ):(
-                                    <p className="font-medium text-xs">Click 'Done' if the form is signed by the Accounting Manager.</p>
+                                    requestStatus == 3 ? <p className="font-medium text-xs">Click 'Done' if the ITR is processed by the accounting staff.</p> : <p className="font-medium text-xs">Undone!</p>
+                                    
                                   )}
                               </div>
                             {requestStatus == 3 && (
@@ -474,7 +575,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '4', 'done', 'ITR')}
+                                onClick={() => update_status(employee.i_req_id, employee.i_id, '4', 'done', 'ITR', '')}
                               >
                                 Done 
                               </Button>
@@ -486,7 +587,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '3', 'undone', 'ITR')}
+                                onClick={() => update_status(employee.i_req_id, employee.i_id, '3', 'undone', 'ITR', '')}
                                 >
                                 Undone 
                                 </Button>
@@ -496,15 +597,24 @@ export function DataTableDemo() {
                            </div>
                           </AccordionContent>
                         </AccordionItem>
-                        <AccordionItem value="item-5">
-                          <AccordionTrigger className={`  ${requestStatus > 4 ? 'text-green-600' : 'text-red-600'}`}>Return to HR staff</AccordionTrigger>
+                        <AccordionItem value="item-4">
+                          <AccordionTrigger className={`  ${requestStatus > 4 ? 'text-green-600 text-[0.8rem] pt-3 pb-3' : 'text-red-600 text-[0.8rem] pt-3 pb-3'}`}>
+                          Accounting Staff will give the ITR/2316 to their Accounting Manager for her sign.
+                          {/* <div className="flex justify-start">
+                                <p>
+                                For Sign
+                                </p>
+                               <span className="text-[0.7rem] ms-2">(Accounting Manager)</span>
+                              </div> */}
+                          </AccordionTrigger>
                           <AccordionContent>
                           <div>
                           <div>
                               {requestStatus > 4 ? (
                                     <p>Done!</p>
                                   ):(
-                                    <p className="font-medium text-xs">Click 'Done' if the ITR is returned to HR staff.</p>
+                                    requestStatus == 4 ? <p className="font-medium text-xs">Click 'Done' if the form is signed by the Accounting Manager.</p> : <p className="font-medium text-xs">Undone!</p>
+                                    //<p className="font-medium text-xs">Click 'Done' if the form is signed by the Accounting Manager.</p>
                                   )}
                               </div>
                             {requestStatus == 4 && (
@@ -513,7 +623,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '5', 'done', 'ITR')}
+                                onClick={() => update_status(employee.i_req_id, employee.i_id, '5', 'done', 'ITR', '')}
                               >
                                 Done 
                               </Button>
@@ -525,7 +635,7 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '4', 'undone', 'ITR')}
+                                onClick={() => update_status(employee.i_req_id, employee.i_id, '4', 'undone', 'ITR', '')}
                                 >
                                 Undone 
                                 </Button>
@@ -535,23 +645,25 @@ export function DataTableDemo() {
                            </div>
                           </AccordionContent>
                         </AccordionItem>
-                        <AccordionItem value="item-6">
-                          <AccordionTrigger className={`  ${requestStatus > 5 ? 'text-green-600' : 'text-red-600'}`}>Notif EE to claim the ITR</AccordionTrigger>
+                        <AccordionItem value="item-5">
+                          <AccordionTrigger className={`  ${requestStatus > 5 ? 'text-green-600 text-[0.8rem] pt-3 pb-3' : 'text-red-600 text-[0.8rem] pt-3 pb-3'}`}>Accounting Staff will transmitted back the Signed ITR/2316 to Hr Staff</AccordionTrigger>
                           <AccordionContent>
-                            <div>
-                                {requestStatus > 5 ? (
-                                      <p>Done!</p>
-                                    ):(
-                                      <p className="font-medium text-xs">Click 'Done' if you have notified the employee to claim the ITR.</p>
-                                    )}
-                            </div>
+                          <div>
+                          <div>
+                              {requestStatus > 5 ? (
+                                    <p>Done!</p>
+                                  ):(
+                                    requestStatus == 5 ? <p className="font-medium text-xs">Click 'Done' if the ITR is returned to HR staff.</p> : <p className="font-medium text-xs">Undone!</p>
+                                    //<p className="font-medium text-xs">Click 'Done' if the ITR is returned to HR staff.</p>
+                                  )}
+                              </div>
                             {requestStatus == 5 && (
                               <div className="w-full space-x-1 flex justify-end">
                               <Button
                                 variant="outline"
                                 size="sm"
                                 className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '6', 'done', 'ITR')}
+                                onClick={() => update_status(employee.i_req_id, employee.i_id, '6', 'done', 'ITR', '')}
                               >
                                 Done 
                               </Button>
@@ -563,32 +675,34 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '5', 'undone', 'ITR')}
+                                onClick={() => update_status(employee.i_req_id, employee.i_id, '5', 'undone', 'ITR', '')}
                                 >
                                 Undone 
                                 </Button>
                               </div>
                               )}
+                           
+                           </div>
                           </AccordionContent>
                         </AccordionItem>
-                        <AccordionItem value="item-7">
-                          <AccordionTrigger className={`  ${requestStatus > 6 ? 'text-green-600' : 'text-red-600'}`}>ITR For Claim</AccordionTrigger>
+                        <AccordionItem value="item-6">
+                          <AccordionTrigger className={`${requestStatus > 6 ? 'text-green-600 text-[0.8rem] pt-3 pb-3' : 'text-red-600 text-[0.8rem] pt-3 pb-3'}`}>Hr Staff to notify the EE</AccordionTrigger>
                           <AccordionContent>
-                          <div>
-                          <div>
-                              {requestStatus > 6 ? (
-                                    <p>Done!</p>
-                                  ):(
-                                    <p className="font-medium text-xs">Click 'Done' if the ITR has been claimed.</p>
-                                  )}
-                              </div>
+                            <div>
+                                {requestStatus > 6 ? (
+                                      <p>Done!</p>
+                                    ):(
+                                      requestStatus == 6 ? <p className="font-medium text-xs">Click 'Done' if you have notified the employee to claim the ITR.</p> : <p className="font-medium text-xs">Undone!</p>
+                                      //<p className="font-medium text-xs">Click 'Done' if you have notified the employee to claim the ITR.</p>
+                                    )}
+                            </div>
                             {requestStatus == 6 && (
                               <div className="w-full space-x-1 flex justify-end">
                               <Button
                                 variant="outline"
                                 size="sm"
                                 className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '7', 'done', 'ITR')}
+                                onClick={() => update_status(employee.i_req_id, employee.i_id, '7', 'done', 'ITR', employee.i_employee_name)}
                               >
                                 Done 
                               </Button>
@@ -600,13 +714,50 @@ export function DataTableDemo() {
                                 variant="outline"
                                 size="sm"
                                 className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '6', 'undone', 'ITR')}
+                                onClick={() => update_status(employee.i_req_id, employee.i_id, '6', 'undone', 'ITR', '')}
                                 >
                                 Undone 
                                 </Button>
                               </div>
                               )}
-                           
+                          </AccordionContent>
+                        </AccordionItem>
+                        <AccordionItem value="item-7">
+                          <AccordionTrigger className={`  ${requestStatus > 7 ? 'text-green-600 text-[0.8rem] pt-3 pb-3' : 'text-red-600 text-[0.8rem] pt-3 pb-3'}`}>EE to claim and sign the receiving copy.</AccordionTrigger>
+                          <AccordionContent>
+                          <div>
+                          <div>
+                              {requestStatus > 7 ? (
+                                    <p>Done!</p>
+                                  ):(
+                                    requestStatus == 7 ? <p className="font-medium text-xs">Click 'Done' if the ITR has been claimed.</p> : <p className="font-medium text-xs">Undone!</p>
+                                    //<p className="font-medium text-xs">Click 'Done' if the ITR has been claimed.</p>
+                                  )}
+                              </div>
+                            {requestStatus == 7 && (
+                              <div className="w-full space-x-1 flex justify-end">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
+                                onClick={() => update_status(employee.i_req_id, employee.i_id, '8', 'done', 'ITR', '')}
+                              >
+                                Done 
+                              </Button>
+                              </div>
+                            )}
+                              {requestStatus == 8 && (
+                                 <div className="w-full space-x-1 flex justify-end">
+                                <Button
+                                variant="outline"
+                                size="sm"
+                                className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
+                                onClick={() => update_status(employee.i_req_id, employee.i_id, '7', 'undone', 'ITR', '')}
+                                >
+                                Undone 
+                                </Button>
+                              </div>
+                              )}
                            </div>
                           </AccordionContent>
                         </AccordionItem>
@@ -620,6 +771,22 @@ export function DataTableDemo() {
                 </AlertDialogContent>
             </AlertDialog>
         </div>
+        <div>
+        <AlertDialog open={isOpenRejectConfirm} onOpenChange={setIsOpenRejectConfirm}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Click Yes to reject the request and send the message.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel  className="h-8">No</AlertDialogCancel>
+                <AlertDialogAction onClick={() => reject_request(req_id, id, receiptName)}  className="h-8">Yes</AlertDialogAction>
+              </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
             <div className="p-1">
             <ul className="flex space-x-3">
             <li>
@@ -627,20 +794,24 @@ export function DataTableDemo() {
                 <Tooltip>
                   <TooltipTrigger>
                   <div className="bg-orange-600 p-1 rounded-sm hover:cursor-pointer" onClick={() => { openDialog();
-                        if(employee.i_req_status == 'For Sign(HR Manager)'){
+                        if(employee.i_req_status == 'Hr Staff to validate the request form'){
+                          setRequestStatus(0)
+                        }else if(employee.i_req_status == 'Hr Staff to submit the request form to the HR Manager for her sign'){
                           setRequestStatus(1)
-                        }else if(employee.i_req_status == 'Accounting staff processing the ITR/2316'){
+                        }else if(employee.i_req_status == 'Hr Staff will transmit the signed request form to Accounting Staff'){
                           setRequestStatus(2)
-                        }else if(employee.i_req_status == 'For Sign(Accounting Manager)'){
+                        }else if(employee.i_req_status == 'Accounting Staff will process the ITR/2316.'){
                           setRequestStatus(3)
-                        }else if(employee.i_req_status == 'Return to HR staff'){
+                        }else if(employee.i_req_status == 'Accounting Staff will give the ITR/2316 to their Accounting Manager for her sign.'){
                           setRequestStatus(4)
-                        }else if(employee.i_req_status == 'Notif EE'){
+                        }else if(employee.i_req_status == 'Accounting Staff will transmitted back the Signed ITR/2316 to Hr Staff'){
                           setRequestStatus(5)
-                        }else if(employee.i_req_status == 'For Claim'){
+                        }else if(employee.i_req_status == 'Hr Staff to notify the EE'){
                           setRequestStatus(6)
-                        }else if(employee.i_req_status == 'Done'){
+                        }else if(employee.i_req_status == 'EE to claim and sign the receiving copy.'){
                           setRequestStatus(7)
+                        }else if(employee.i_req_status == 'Done'){
+                          setRequestStatus(8)
                         }
                       }}>
                         <MdEdit className="w-4 h-4 text-white" />
@@ -651,318 +822,7 @@ export function DataTableDemo() {
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-              {/* <TooltipProvider delayDuration={100}>
-                <Tooltip>
-                  <TooltipTrigger>
-                  <Dialog >
-                    <DialogTrigger>
-                      <div className="bg-orange-600 p-1 rounded-sm hover:cursor-pointer" onClick={() => { openDialog();
-                        if(employee.i_req_status == 'For Sign(HR Manager)'){
-                          setRequestStatus(1)
-                        }else if(employee.i_req_status == 'Accounting staff processing the ITR/2316'){
-                          setRequestStatus(2)
-                        }else if(employee.i_req_status == 'For Sign(Accounting Manager)'){
-                          setRequestStatus(3)
-                        }else if(employee.i_req_status == 'Return to HR staff'){
-                          setRequestStatus(4)
-                        }else if(employee.i_req_status == 'Notif EE'){
-                          setRequestStatus(5)
-                        }else if(employee.i_req_status == 'Claimed'){
-                          setRequestStatus(6)
-                        }else if(employee.i_req_status == 'Done'){
-                          setRequestStatus(7)
-                        }
-                      }}>
-                        <MdEdit className="w-4 h-4 text-white" />
-                      </div>
-                    </DialogTrigger>
-                      <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>ITR/2316 Request Status</DialogTitle>
-                        <DialogDescription>
-                          <div className="">
-                            <p> Name: {employee.i_employee_name}</p>
-                            <p className=" capitalize"> Employee Status: {employee.i_emp_status}</p>
-                            <p> Id no: {employee.i_emp_status == 'active' ? employee.i_id_no : '----'}</p>
-                          </div>
-                         
-                        </DialogDescription>
-                      <Accordion type="single" collapsible className="w-full">
-                        <AccordionItem value="item-1">
-                          <AccordionTrigger className={` ${requestStatus > 0 ? 'text-green-600' : 'text-red-600'}`}>For validate</AccordionTrigger>
-                          <AccordionContent>
-                          <div>
-                            <p>
-                            Yes. It comes with default styles that matches the other
-                            components&apos; aesthetic.
-                            </p>
-                            {requestStatus == 0 && (
-                              <div className="w-full space-x-1 flex justify-end">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '1', 'done')}
-                              >
-                                Done 
-                              </Button>
-                              </div>
-                            )}
-                              {requestStatus == 1 && (
-                                 <div className="w-full space-x-1 flex justify-end">
-                                <Button
-                                variant="outline"
-                                size="sm"
-                                className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '0', 'undone')}
-                                >
-                                Undone 
-                                </Button>
-                              </div>
-                              )}
-                           
-                           </div>
-                          </AccordionContent>
-                        </AccordionItem>
-                        <AccordionItem value="item-2">
-                          <AccordionTrigger className={`  ${requestStatus > 1 ? 'text-green-600' : 'text-red-600'}`}>
-                              <div className="flex justify-start">
-                                <p>
-                                For Sign
-                                </p>
-                               <span className="text-[0.7rem] ms-2">(HR Manageer)</span>
-                              </div>
-                            </AccordionTrigger>
-                          <AccordionContent>
-                           <div>
-                            <p>
-                            Yes. It comes with default styles that matches the other
-                            components&apos; aesthetic.
-                            </p>
-                            {requestStatus == 1 && (
-                              <div className="w-full space-x-1 flex justify-end">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '2', 'done')}
-                              >
-                                Done 
-                              </Button>
-                              </div>
-                            )}
-                              {requestStatus == 2 && (
-                                 <div className="w-full space-x-1 flex justify-end">
-                                <Button
-                                variant="outline"
-                                size="sm"
-                                className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '1', 'undone')}
-                                >
-                                Undone 
-                                </Button>
-                              </div>
-                              )}
-                           
-                           
-                           </div>
-                          </AccordionContent>
-                        </AccordionItem>
-                        <AccordionItem value="item-3">
-                          <AccordionTrigger className={`  ${requestStatus > 2 ? 'text-green-600' : 'text-red-600'}`}>Accounting staff processing the ITR/2316.</AccordionTrigger>
-                          <AccordionContent>
-                          <div>
-                            <p>
-                            Yes. It comes with default styles that matches the other
-                            components&apos; aesthetic.
-                            </p>
-                            {requestStatus == 2 && (
-                              <div className="w-full space-x-1 flex justify-end">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '3', 'done')}
-                              >
-                                Done 
-                              </Button>
-                              </div>
-                            )}
-                              {requestStatus == 3 && (
-                                 <div className="w-full space-x-1 flex justify-end">
-                                <Button
-                                variant="outline"
-                                size="sm"
-                                className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '2', 'undone')}
-                                >
-                                Undone 
-                                </Button>
-                              </div>
-                              )}
-                           
-                           </div>
-                          </AccordionContent>
-                        </AccordionItem>
-                        <AccordionItem value="item-4">
-                          <AccordionTrigger className={`  ${requestStatus > 3 ? 'text-green-600' : 'text-red-600'}`}>
-                          <div className="flex justify-start">
-                                <p>
-                                For Sign
-                                </p>
-                               <span className="text-[0.7rem] ms-2">(Accounting Manager)</span>
-                              </div>
-                          </AccordionTrigger>
-                          <AccordionContent>
-                          <div>
-                            <p>
-                            Yes. It comes with default styles that matches the other
-                            components&apos; aesthetic.
-                            </p>
-                            {requestStatus == 3 && (
-                              <div className="w-full space-x-1 flex justify-end">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '4', 'done')}
-                              >
-                                Done 
-                              </Button>
-                              </div>
-                            )}
-                              {requestStatus == 4 && (
-                                 <div className="w-full space-x-1 flex justify-end">
-                                <Button
-                                variant="outline"
-                                size="sm"
-                                className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '3', 'undone')}
-                                >
-                                Undone 
-                                </Button>
-                              </div>
-                              )}
-                           
-                           </div>
-                          </AccordionContent>
-                        </AccordionItem>
-                        <AccordionItem value="item-5">
-                          <AccordionTrigger className={`  ${requestStatus > 4 ? 'text-green-600' : 'text-red-600'}`}>Return to HR staff</AccordionTrigger>
-                          <AccordionContent>
-                          <div>
-                            <p>
-                            Yes. It comes with default styles that matches the other
-                            components&apos; aesthetic.
-                            </p>
-                            {requestStatus == 4 && (
-                              <div className="w-full space-x-1 flex justify-end">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '5', 'done')}
-                              >
-                                Done 
-                              </Button>
-                              </div>
-                            )}
-                              {requestStatus == 5 && (
-                                 <div className="w-full space-x-1 flex justify-end">
-                                <Button
-                                variant="outline"
-                                size="sm"
-                                className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '4', 'undone')}
-                                >
-                                Undone 
-                                </Button>
-                              </div>
-                              )}
-                           
-                           </div>
-                          </AccordionContent>
-                        </AccordionItem>
-                        <AccordionItem value="item-6">
-                          <AccordionTrigger className={`  ${requestStatus > 5 ? 'text-green-600' : 'text-red-600'}`}>Notif EE to claim the ITR</AccordionTrigger>
-                          <AccordionContent>
-                            <div>
-                              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus, impedit illum? Iusto numquam delectus ipsa maiores id vero facilis omnis.</p>
-                            </div>
-                            {requestStatus == 5 && (
-                              <div className="w-full space-x-1 flex justify-end">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '6', 'done')}
-                              >
-                                Done 
-                              </Button>
-                              </div>
-                            )}
-                              {requestStatus == 6 && (
-                                 <div className="w-full space-x-1 flex justify-end">
-                                <Button
-                                variant="outline"
-                                size="sm"
-                                className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '5', 'undone')}
-                                >
-                                Undone 
-                                </Button>
-                              </div>
-                              )}
-                          </AccordionContent>
-                        </AccordionItem>
-                        <AccordionItem value="item-7">
-                          <AccordionTrigger className={`  ${requestStatus > 6 ? 'text-green-600' : 'text-red-600'}`}>ITR Claimed</AccordionTrigger>
-                          <AccordionContent>
-                          <div>
-                            <p>
-                            Yes. It comes with default styles that matches the other
-                            components&apos; aesthetic.
-                            </p>
-                            {requestStatus == 6 && (
-                              <div className="w-full space-x-1 flex justify-end">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="bg-green-600 text-white hover:bg-green-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '7', 'done')}
-                              >
-                                Done 
-                              </Button>
-                              </div>
-                            )}
-                              {requestStatus == 7 && (
-                                 <div className="w-full space-x-1 flex justify-end">
-                                <Button
-                                variant="outline"
-                                size="sm"
-                                className="bg-red-600 text-white hover:bg-red-500 hover:text-white"
-                                onClick={() => update_status(employee.i_req_id, employee.i_id, '6', 'undone')}
-                                >
-                                Undone 
-                                </Button>
-                              </div>
-                              )}
-                           
-                           </div>
-                          </AccordionContent>
-                        </AccordionItem>
-                      </Accordion>
-  
-                      </DialogHeader>
-                    </DialogContent>
-                  </Dialog>
-              
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Edit Req Status</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider> */}
+             
               </li>
               <li>
               <TooltipProvider delayDuration={100}>
@@ -977,7 +837,7 @@ export function DataTableDemo() {
                   <DialogContent className="">
                     <DialogHeader>
                       <div className="">
-                        <form className="w-full space-y-4 p-3 bg-white rounded shadow-md text-gray-700 text-xs font-medium" 
+                        <form className="w-full space-y-4 p-3 bg-white rounded shadow-md text-gray-700 text-[0.65rem] font-medium" 
                           style={{fontFamily: "Poppins, sans-serif"}}
                           >
                               <div>
@@ -1030,7 +890,7 @@ export function DataTableDemo() {
                               )}
                             
                               <div>
-                                  <label htmlFor="status" className="block">Staus:</label>
+                                  <label htmlFor="status" className="block">Status:</label>
                                   <input 
                                     disabled type="text" id="status" className='mt-1 block w-full border rounded-md p-2' 
                                     value={employee.i_emp_status}
@@ -1099,17 +959,23 @@ export function DataTableDemo() {
   const [page_, setPage] = useState(0);
   const [itrPending, setItrData] = useState<PendingITR[]>([]);
   const rowsPerPage = 10;
+  const [forSearch, setForSearch] = useState("");
+  const [filterBy, setFilterBy] = useState("i_id_no");
+  const [itrCount, setItrCount] = useState(0);
 
   const fetch_pending_itr_for_hr = async () => {
     try {
       const formdata = new FormData();
       formdata.append("limit", rowsPerPage.toString());
       formdata.append("current_page", [page_].toString());
+      formdata.append("is_pending", 'pending');
+      formdata.append("for_search", forSearch);
+      formdata.append("col_type", filterBy.replace('_', '.'));
       const response = await axios.post(
         `${API_SERVER_URL}/Api/fetch_pending_itr_for_hr`,
         formdata
       );
-      console.log("response ini: ", response.data)
+      //console.log("response ini: ", response.data)
       setItrData(response.data)
       //return response.data;
     } catch (error) {
@@ -1120,22 +986,26 @@ export function DataTableDemo() {
   const fetch_count_pending_itr_for_hr = async () => {
     try {
       const formdata = new FormData();
+      formdata.append("is_pending", 'pending');
+      formdata.append("for_search", forSearch);
+      formdata.append("col_type", filterBy.replace('_', '.'));
       const response = await axios.post(
         `${API_SERVER_URL}/Api/fetch_count_pending_itr_for_hr`,
         formdata
-      );return response.data;
+      );
+      setItrCount(response.data)
+      return response.data;
     } catch (error) {
       console.error("Error fetching data:", error);
       throw error; // Re-throw to allow react-query to handle the error
     }
   };
 
-
-
   useEffect(() => {
-    refetchCount();
+    // refetchCount();
+    fetch_count_pending_itr_for_hr()
     fetch_pending_itr_for_hr();
-  }, [page_])
+  }, [page_, forSearch, filterBy])
   
   const next = () => {
     if ((page_ + 1) * rowsPerPage < itrCount) {
@@ -1149,14 +1019,14 @@ export function DataTableDemo() {
     }
   };
 
-  const { data: itrCount, refetch: refetchCount } = useQuery({
-    queryKey: ['itr_count'],
-    queryFn: fetch_count_pending_itr_for_hr,
-    staleTime: 10 * 1000,
-    refetchOnWindowFocus: true,
-    refetchOnReconnect: true,
-    refetchOnMount: true,
-  });
+  // const { data: itrCount, refetch: refetchCount } = useQuery({
+  //   queryKey: ['itr_count'],
+  //   queryFn: fetch_count_pending_itr_for_hr,
+  //   staleTime: 10 * 1000,
+  //   refetchOnWindowFocus: true,
+  //   refetchOnReconnect: true,
+  //   refetchOnMount: true,
+  // });
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -1182,7 +1052,6 @@ export function DataTableDemo() {
     },
   });
 
-  const [filterBy, setFilterBy] = useState("i_id_no");
 
   return (
     <>
@@ -1191,7 +1060,7 @@ export function DataTableDemo() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="mr-1 text-gray-600">
-              Filter by <ChevronDown className="h-4 w-4 ms-2" />
+              Filter by <ChevronDown className="h-4 w-4 ms-2 text-[0.7rem]" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="center" className="capitalize">
@@ -1200,17 +1069,18 @@ export function DataTableDemo() {
                 key={column.id}
                 onSelect={() => setFilterBy(column.id.toString())}
               >
-                {column.id}
+                {column.id.slice(2)}
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
         <Input
-          placeholder={filterBy.charAt(0).toUpperCase() + filterBy.slice(1) + ' . . .'}
-          value={(table.getColumn(filterBy)?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn(filterBy)?.setFilterValue(event.target.value)
-          }
+          placeholder={filterBy.slice(2) + '.....'}
+          //value={(table.getColumn(filterBy)?.getFilterValue() as string) ?? ""}
+          // onChange={(event) =>
+          //   table.getColumn(filterBy)?.setFilterValue(event.target.value)
+          // }
+          onChange={(e) => setForSearch(e.target.value)}
           className="max-w-sm"
         />
         <DropdownMenu>
@@ -1227,7 +1097,7 @@ export function DataTableDemo() {
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >
-                {column.id}
+                {column.id.slice(2)}
               </DropdownMenuCheckboxItem>
             ))}
           </DropdownMenuContent>
@@ -1239,14 +1109,14 @@ export function DataTableDemo() {
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id} className=" text-[0.8rem] ">
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody style={{fontFamily: "Poppins, sans-serif", fontWeight: 410}} className=" text-xs text-gray-900">
+          <TableBody style={{fontFamily: "Poppins, sans-serif", fontWeight: 410}} className=" text-[0.65rem] text-gray-900">
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className="">
@@ -1259,7 +1129,7 @@ export function DataTableDemo() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell colSpan={columns.length} className="h-10 text-center">
                   No results.
                 </TableCell>
               </TableRow>
@@ -1269,7 +1139,7 @@ export function DataTableDemo() {
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {(rowsPerPage * page_) + 1} - {Math.min(rowsPerPage * (page_ + 1), itrCount)} of {itrCount}
+         {itrCount > 0 ? (rowsPerPage * page_) + 1 : '0' } - {Math.min(rowsPerPage * (page_ + 1), itrCount)} of {itrCount}
         </div>
         <div className="space-x-2">
           <Button

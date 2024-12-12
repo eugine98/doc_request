@@ -2,7 +2,7 @@
 import HRsideBar from '../HRsideBar';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { DataTableDemo } from './HRPendingITRRequest';
+//import { DataTableDemo } from './HRPendingITRRequest';
 // import axios from 'axios';
 // import { API_SERVER_URL } from "@/config";
 // import { useQuery } from '@tanstack/react-query';
@@ -13,10 +13,11 @@ import Loader from '../../Loader';
 
 // import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { DataTableMonthPay } from './HRMonthPayPending';
+import { DataTableClaimedMonthPay } from './HRMonthPayClaimed';
 import { NotebookPen } from 'lucide-react';
-import { DataTableClaimedITR } from './HRClaimedITR';
 
-function HRITR2316() {
+function HRMonthPay() {
 //USESTATE
   const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState("pending_request")
@@ -77,13 +78,13 @@ useEffect(() => {
         <div className='fixed top-0 border-l-0 border border-gray-200 w-full'>
         <div className='flex border-b border-gray-200 '>
         <NotebookPen size={25} className='ms-3 mt-2.5 mr-1 hidden sm:block'/>
-                <motion.p className="  font-bold text-2xl w-full bg-white p-2 pl-0.5 flex justify-end sm:justify-start"
+        <motion.p className="  font-bold text-2xl w-full bg-white p-2 pl-0.5 flex justify-end sm:justify-start"
           style={{ fontFamily: "Nunito, sans-serif"}}
         >
-          ITR/2316
+           13<span className="inline-block align-text-top text-sm me-1">th</span> MONTH PAY
         </motion.p>
         </div>
-
+     
       <div className=' w-full bg-white ms-4'>
         <div>
             <ul className='flex space-x-10 text-sm font-semibold '
@@ -91,11 +92,13 @@ useEffect(() => {
             >
               <li 
                  className={`pt-3 pb-3 hover:cursor-pointer hover:text-blue-600 ${currentPage == "pending_request" && 'border-b-2 border-blue-600 text-blue-600'}`}
-                  onClick={() => setCurrentPage("pending_request")}>
-                <div className="flex items-center p-0.5 rounded-lg dark:text-white group">
+              onClick={() => setCurrentPage("pending_request")}>
+                <div className="flex items-center p-0.5 rounded-lg dark:text-white  group">
                 <GrDocumentText className='w-4 h-4' />
                 <div className='flex'>
                     <p className='flex-1 ms-3 whitespace-nowrap group-hover:text-blue-600'>Pending</p>
+                    {/* <p className=" ms-2 text-green-600">active</p>
+                 <div className='w-2 h-2 mt-1.5 ms-1 rounded-full bg-green-600'></div> */}
                 </div>
               </div>
               </li>
@@ -103,7 +106,7 @@ useEffect(() => {
               className={` pt-3 pb-3 hover:cursor-pointer hover:text-blue-600 ${currentPage == "request_form" && 'border-b-2 border-blue-600 text-blue-600'}`}
               onClick={() => setCurrentPage("request_form")}>
                   <div className="flex items-center p-0.5 rounded-lg dark:text-white group">
-                  <GrDocumentText className='w-4 h-4'/>
+                  <GrDocumentText className='w-4 h-4' />
                   <div className='flex'>
                     <p className='flex-1 ms-3 whitespace-nowrap group-hover:text-blue-600'>Claimed</p>
                     {/* <p className=" ms-2 text-red-600">resigned</p>
@@ -119,24 +122,15 @@ useEffect(() => {
         
       </div>
        
-        <div className="w-full pt-14  p-5">
+        <div className="w-full pt-14 p-5">
         {currentPage == 'pending_request' ? (
           <div className=" rounded-lg bg-white  p-5">
-          <DataTableDemo />
+          <DataTableMonthPay />
           </div>
         ):(
-          // <div className="flex items-center justify-center w-full bg-white dark:bg-gray-800">
-          //   <div className="text-xl mt-40">
-          //     <div className="flex justify-center">
-          //       <SearchX className=" w-7 h-7 mb-1"/>
-          //     </div>
-          //     <p className='text-sm'>No results found!</p>
-          //   </div>
-          // </div>
           <div className=" rounded-lg bg-white  p-5">
-          <DataTableClaimedITR />
+           <DataTableClaimedMonthPay />
           </div>
-
         )}
           
           
@@ -148,4 +142,4 @@ useEffect(() => {
   )
 }
 
-export default HRITR2316
+export default HRMonthPay

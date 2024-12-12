@@ -9,6 +9,7 @@ function Loader() {
         open={true}
       >
           <CircularProgress color="inherit" />
+          {/* <Loader className='animate-spin' /> */}
       </Backdrop>
   );
 }

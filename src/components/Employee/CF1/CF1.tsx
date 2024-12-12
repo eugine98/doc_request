@@ -16,11 +16,12 @@ import { toast } from 'sonner';
 import { FaRegCheckCircle } from "react-icons/fa";
 import { MdErrorOutline } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
-import COEPendingRequest from './COEPendingRequest';
+import CF1PendingRequest from './CF1PendingRequest';
 import { NotebookPen } from 'lucide-react';
 // import { Bell } from 'lucide-react';
 
 const schema = z.object({
+  // id_no: z.string().min(1, { message: "Name is required." }),
   id_no: z.string().optional(),
   employee_name: z.string().min(1, { message: "Name is required." }),
   date_requested: z.string().refine(value => {
@@ -39,7 +40,7 @@ const schema = z.object({
 })
 type FormData = z.infer<typeof schema>
 
-function COE() {
+function CF1() {
   
   const { 
     register, 
@@ -77,7 +78,7 @@ function COE() {
     try {
       const formdata = new FormData();
       formdata.append("data", JSON.stringify(data));
-      const response = await axios.post(`${API_SERVER_URL}/Api/add_coe_request`, formdata);
+      const response = await axios.post(`${API_SERVER_URL}/Api/add_cf1_request`, formdata);
       if(response.data.code == 0){
         toast.error('', {
           className: 'my-classname',
@@ -88,7 +89,7 @@ function COE() {
       }else{
         toast.success('', {
           className: 'my-classname',
-          description: "Your request for COE has been successfully submitted.",
+          description: "Your request for CF1 has been successfully submitted.",
           duration: 2500,
           icon: <FaRegCheckCircle className="h-5 w-5" />,
         });
@@ -190,8 +191,6 @@ useEffect(() => {
   }, [empDataFromBackend, empDataLoading, empData] )
 /////////////////////////////////
   const emp_status = watch("emp_status");
-  // const currentYear = new Date().getFullYear();
-  // const years = Array.from({ length: currentYear - 1999 }, (_, i) => (2000 + i).toString());
   return (
     <>
         {showLoader && (
@@ -202,7 +201,7 @@ useEffect(() => {
         <SideBar />
     </div>
     
-    <div className="relative sm:ml-52 bg-white">
+    <div className="relative sm:ml-52 bg-white ">
       <div className="absolute w-full h-5 ">
       {/* <div className=" w-full h-6 bg-white fixed top-0">
 
@@ -210,15 +209,15 @@ useEffect(() => {
       </div>
       <div className="absolute w-full h-5 z-20">
         <div className='fixed top-0 border-l border border-gray-200 w-full'>
-        <div className='flex border-b border-gray-200 bg-white'>
+        <div className="flex border-b border-gray-200 bg-white">
         <NotebookPen size={25} className='ms-3 mt-2.5 mr-1 hidden sm:block'/>
-        <motion.p className="font-bold text-2xl w-full bg-white p-2 pl-0.5 flex justify-end sm:justify-start"
+        <p className="font-bold text-2xl w-full bg-white p-2 pl-0.5 flex justify-end sm:justify-start"
           style={{ fontFamily: "Nunito, sans-serif"}}
         >
-          COE
-        </motion.p>
+          CF1 <span className='text-xs mt-2.5 ms-1.5'>(only 1 year and above tenure)</span>
+        </p>
         </div>
-        
+       
       <div className=' w-full bg-white'>
         <div>
         <ul className='flex text-sm font-medium'
@@ -229,7 +228,7 @@ useEffect(() => {
               onClick={() => setCurrentPage("request_form")}>
                   <div className="flex items-center p-2 rounded-lg dark:text-white group w-40">
                   <GrDocumentText className='w-3.5 h-3.5' />
-                  <span className="flex-1 ms-1 whitespace-nowrap mt-1.5">COE Form</span>
+                  <span className="flex-1 ms-1 whitespace-nowrap mt-1.5">CF1 Form</span>
                 </div>
               </li>
               <li 
@@ -269,12 +268,12 @@ useEffect(() => {
                   <td className='border border-gray-200' colSpan={2}>FREIGHT PROCESS OUTSOURCING SOLUTIONS, INC.</td>
                   <td className='border border-gray-200' colSpan={2}>
                       Document No. <br/>
-                      ISMS-HR-FR-193
+                      ISMS-HR-FR-196
                   </td>
               </tr>
               <tr>
                   <td className='border border-gray-200' colSpan={2}>
-                  Request for Certificate of Employment
+                  Request for Claim Form 1 & Certificate of PhilHealth Contribution
                   </td>
                   <td className='border border-gray-200' colSpan={2}></td>
               </tr>
@@ -368,16 +367,14 @@ useEffect(() => {
               </div>
 
 
-              {emp_status == "active" && (
-                    <div>
-                      <label htmlFor="date_hired" className="block">Date Hired:</label>
-                      <input 
-                      disabled
-                          required type="date" id="date_hired" className={`mt-1 block w-full border rounded-md p-2 ${errors.date_hired && 'bg-red-100 border-2 border-red-400'}`}
-                        {...register("date_hired")}
-                      />
-                    </div>
-                )}
+              <div>
+                    <label htmlFor="date_hired" className="block">Date Hired:</label>
+                    <input 
+                    disabled={emp_status == "active"}
+                        required type="date" id="date_hired" className={`mt-1 block w-full border rounded-md p-2 ${errors.date_hired && 'bg-red-100 border-2 border-red-400'}`}
+                    {...register("date_hired")}
+                    />
+            </div>
 
               {emp_status == "resigned" && (
                     <div>
@@ -405,7 +402,7 @@ useEffect(() => {
         ):
         (
           <div className=" rounded-lg bg-white">
-            <COEPendingRequest/>
+            <CF1PendingRequest />
           </div>
         )}
           
@@ -417,4 +414,4 @@ useEffect(() => {
   )
 }
 
-export default COE
+export default CF1

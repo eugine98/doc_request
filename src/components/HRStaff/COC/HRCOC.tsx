@@ -2,7 +2,7 @@
 import HRsideBar from '../HRsideBar';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { DataTableDemo } from './HRPendingITRRequest';
+//import { DataTableDemo } from './HRPendingITRRequest';
 // import axios from 'axios';
 // import { API_SERVER_URL } from "@/config";
 // import { useQuery } from '@tanstack/react-query';
@@ -14,9 +14,11 @@ import Loader from '../../Loader';
 // import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { NotebookPen } from 'lucide-react';
-import { DataTableClaimedITR } from './HRClaimedITR';
+import { DataTableCOC } from './HRCOCPendingRequest';
+import { DataTableClaimedCOC } from './HRCOCClaimed';
+//import { DataTableClaimedITR } from './HRClaimedITR';
 
-function HRITR2316() {
+function HRCOC() {
 //USESTATE
   const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState("pending_request")
@@ -80,10 +82,9 @@ useEffect(() => {
                 <motion.p className="  font-bold text-2xl w-full bg-white p-2 pl-0.5 flex justify-end sm:justify-start"
           style={{ fontFamily: "Nunito, sans-serif"}}
         >
-          ITR/2316
+          COC
         </motion.p>
         </div>
-
       <div className=' w-full bg-white ms-4'>
         <div>
             <ul className='flex space-x-10 text-sm font-semibold '
@@ -91,8 +92,8 @@ useEffect(() => {
             >
               <li 
                  className={`pt-3 pb-3 hover:cursor-pointer hover:text-blue-600 ${currentPage == "pending_request" && 'border-b-2 border-blue-600 text-blue-600'}`}
-                  onClick={() => setCurrentPage("pending_request")}>
-                <div className="flex items-center p-0.5 rounded-lg dark:text-white group">
+              onClick={() => setCurrentPage("pending_request")}>
+                <div className="flex items-center p-0.5 rounded-lg dark:text-white  group">
                 <GrDocumentText className='w-4 h-4' />
                 <div className='flex'>
                     <p className='flex-1 ms-3 whitespace-nowrap group-hover:text-blue-600'>Pending</p>
@@ -119,10 +120,10 @@ useEffect(() => {
         
       </div>
        
-        <div className="w-full pt-14  p-5">
+        <div className="w-full pt-14 p-5">
         {currentPage == 'pending_request' ? (
           <div className=" rounded-lg bg-white  p-5">
-          <DataTableDemo />
+          <DataTableCOC />
           </div>
         ):(
           // <div className="flex items-center justify-center w-full bg-white dark:bg-gray-800">
@@ -134,11 +135,9 @@ useEffect(() => {
           //   </div>
           // </div>
           <div className=" rounded-lg bg-white  p-5">
-          <DataTableClaimedITR />
+          <DataTableClaimedCOC />
           </div>
-
         )}
-          
           
         </div>
     </div>
@@ -148,4 +147,4 @@ useEffect(() => {
   )
 }
 
-export default HRITR2316
+export default HRCOC

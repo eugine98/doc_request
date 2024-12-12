@@ -3,12 +3,12 @@
 import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 // import { Sidebar } from '../ui/sidebar';
-import { Sidebar } from "@/components/ui/sidebar"
+// import { Sidebar } from "@/components/ui/sidebar"
 // import { CiSquareQuestion } from "react-icons/ci";
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import useStore from '../Employee/LoginPage/store';
-import { GrDocumentText } from "react-icons/gr";
+// import { GrDocumentText } from "react-icons/gr";
 import { useState } from 'react';
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BiLogOutCircle } from "react-icons/bi";
@@ -33,11 +33,12 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 
-import {
-   Popover,
-   PopoverContent,
-   PopoverTrigger,
- } from "@/components/ui/popover"
+// import {
+//    Popover,
+//    PopoverContent,
+//    PopoverTrigger,
+//  } from "@/components/ui/popover"
+import { NotebookPen } from 'lucide-react';
  
 
 function HRsideBar() {
@@ -93,7 +94,99 @@ function HRsideBar() {
          </div>
        
 {/* sidebar */}
-<aside id="logo-sidebar" className="fixed top-0 left-0 z-40 w-56 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar"
+<aside id="logo-sidebar" className="fixed top-0 left-0 z-40 w-52 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar"
+   // style={{ fontFamily: "Nunito, sans-serif"}}
+   style={{
+      // backgroundColor: '#0093E9',
+      // backgroundImage: 'linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)',
+      // background: 'rgb(0, 127, 255)', // Fallback background color (solid blue)
+      // backgroundImage: 'linear-gradient(0deg, rgba(0, 127, 255, 1) 25%, rgba(137, 207, 240, 1) 100%)' // Gradient from blue to light blue
+      // background: 'rgb(150, 0, 24)', // Fallback background color (dark red)
+      // backgroundImage: 'linear-gradient(0deg, rgba(150, 0, 24, 1) 25%, rgba(255, 8, 0, 1) 100%)' // Gradient from dark red to 
+      background: 'linear-gradient(0deg, rgba(0,34,68,1) 25%, rgba(0,70,135,1) 100%)',
+  }}
+>
+<div className="h-full px-2 py-2 overflow-y-auto  dark:bg-gray-800 ">
+      <motion.div className="flex flex-col rounded-sm pb-2 bg-slate-200"
+      style={{ 
+         boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px'
+      }}
+      >
+         <div className='flex justify-center'>
+         <img src="src\assets\img\fpo2.png" className=" pt-2" alt="Logo"/>
+         </div>
+         <motion.p className="self-center font-semibold whitespace-nowrap dark:text-white z-20 text-[0.7rem] text-gray-800 pt-1.5 pb-0.5" style={{fontFamily: "Poppins, sans-serif"}}>Document Request</motion.p>
+      </motion.div>
+      <motion.ul  className="text-xs  text-gray-900 mt-4" style={{ fontFamily: "Fredoka, sans-serif"}}>
+        <li className="hover:cursor-pointer pt-[0.03rem] pb-[0.03rem]" onClick={()=> navigate("/HR-ITR")}>
+            <div className={`flex items-center p-2 rounded-md hover:bg-slate-200 hover:shadow-sm group hover:text-black ${location.pathname == "/HR-ITR" ? "bg-gray-200 shadow-md font-semibold text-gray-950" : 'text-white' }`}>
+               <NotebookPen strokeWidth={location.pathname === '/HR-ITR' ? 3 : undefined} className='w-4 h-4 pb-0.5'/>
+               <span className="flex-1 ms-1.5 whitespace-nowrap ">ITR/2316</span>
+               </div>
+         </li>
+         <li className="hover:cursor-pointer pt-[0.03rem] pb-[0.03rem] " onClick={()=> navigate("/HR-COE")}>
+            <div 
+            className={`flex items-center p-2 rounded-md hover:bg-slate-200 hover:shadow-sm group hover:text-black ${location.pathname == "/HR-COE" ? "bg-gray-200 shadow-md font-semibold text-gray-950" : 'text-white' }` }
+            >
+               <NotebookPen strokeWidth={location.pathname === '/HR-COE' ? 3 : undefined}  className='w-4 h-4 pb-0.5'/>
+               <span className=" ms-1.5 ">COE</span>
+            </div>
+         </li>
+         <li className="hover:cursor-pointer pt-[0.03rem] pb-[0.03rem] " onClick={()=> navigate("/HR-COC")}>
+            <div className={`flex items-center p-2 rounded-md hover:bg-slate-200 hover:shadow-sm group hover:text-black ${location.pathname == "/HR-COC" ? "bg-gray-200 shadow-md font-semibold text-gray-950" : 'text-white' }` }
+            >
+               <NotebookPen strokeWidth={location.pathname === '/HR-COC' ? 3 : undefined}  className='w-4 h-4 pb-0.5' />
+               <span className="ms-1.5 whitespace-nowrap  mr-5">COC</span>
+               </div>
+         </li>
+         <li className="hover:cursor-pointer pt-[0.03rem] pb-[0.03rem] " onClick={()=> navigate("/HR-CF1")}>
+            <div  className={`flex items-center p-2 rounded-md hover:bg-slate-200 hover:shadow-sm group hover:text-black ${location.pathname == "/HR-CF1" ? "bg-gray-200 shadow-md font-semibold text-gray-950" : 'text-white' }` }
+            >
+               <NotebookPen strokeWidth={location.pathname === '/HR-CF1' ? 3 : undefined}  className='w-4 h-4 pb-0.5' />
+               <span className="flex-1 ms-1.5 whitespace-nowrap ">CF1</span>
+            </div>
+         </li>
+         <li className="hover:cursor-pointer pt-[0.03rem] pb-[0.03rem]  " onClick={()=> navigate("/HR-13Month")}>
+            <div 
+            className={`flex items-center p-2 rounded-md hover:bg-slate-200 hover:shadow-sm group hover:text-black ${location.pathname == "/HR-13Month" ? "bg-gray-200 shadow-md font-semibold text-gray-950" : 'text-white' }` }
+            >
+               <NotebookPen strokeWidth={location.pathname === '/HR-13Month' ? 3 : undefined}  className='w-4 h-4 pb-0.5'/>
+               <span className=" ms-1.5 ">13<span className="inline-block align-text-top text-xs">th</span> Month Pay</span>
+            </div>
+         </li>
+      </motion.ul>
+   </div>
+   <div className='w-full fixed bottom-0 pt-1 pb-4 pl-2 flex z-20 shadow-lg border-t border-blue-950 bg-[#082444]'>
+
+
+<DropdownMenu>
+  <DropdownMenuTrigger>
+   <div className='flex w-full '>
+   <motion.div className='group flex hover:cursor-pointer mt-3'>
+      <img src={empData.picture_location} className="h-6 rounded-full me-2 sm:h-8" alt="logo"/>
+      <div className='mt-1'>
+        <p className='font-bold text-[0.60rem]  group flex justify-start text-gray-400'>{empData.first_name} {empData.last_name}</p>
+        <p className='text-[0.50rem] font-bold text-gray-500 flex justify-start'>{empData.job_job_title}</p>
+      </div>
+    </motion.div>
+    </div>
+ 
+  </DropdownMenuTrigger>
+  <DropdownMenuContent className='w-52 sm:block hidden ' align='center'>
+    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+    <DropdownMenuSeparator />
+    <DropdownMenuItem className='hover:cursor-pointer ' onClick={() => openDialog()}>
+      <BiLogOutCircle />
+      <span>Logout</span>
+    </DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+    
+    
+   </div>
+</aside>
+
+{/* <aside id="logo-sidebar" className="fixed top-0 left-0 z-40 w-56 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar"
    // style={{ fontFamily: "Nunito, sans-serif"}}
    style={{
       backgroundColor: 'white',
@@ -111,37 +204,37 @@ function HRsideBar() {
       <motion.ul  className="text-[0.87rem] font-normal mt-14 text-gray-900 " style={{ fontFamily: "Fredoka, sans-serif"}}>
         <li className="hover:cursor-pointer border-b border-gray-200" onClick={()=> navigate("/HR-ITR")}>
             <div 
-            className={`flex items-center p-4 rounded-xs dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 group ${location.pathname == "/ITR" && "bg-gray-200 dark:bg-gray-700" }` }
+            className={`flex items-center p-4 rounded-xs dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 group ${location.pathname == "/ITR" ? "bg-gray-200 dark:bg-gray-700" }` }
             >
-               <GrDocumentText className='w-4 h-4 pb-0.5' />
+  : 'text-white'              <GrDocumentText className='w-4 h-4 pb-0.5' />
                <span className="flex-1 ms-1.5 whitespace-nowrap group-hover:text-blue-600">ITR/2316</span>
                </div>
          </li>
-         <li className="hover:cursor-pointer border-b border-gray-200">
+         <li className="hover:cursor-pointer border-b border-gray-200" onClick={()=> navigate("/HR-COE")}>
             <div 
-            className={`flex items-center p-4 rounded-xs dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 group ${location.pathname == "/COE" && "bg-gray-200 dark:bg-gray-700" }` }
+            className={`flex items-center p-4 rounded-xs dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 group ${location.pathname == "/COE" ? "bg-gray-200 dark:bg-gray-700" }` }
             >
-               <GrDocumentText className='w-4 h-4 pb-0.5' />
+  : 'text-white'              <GrDocumentText className='w-4 h-4 pb-0.5' />
                <span className=" ms-1.5 group-hover:text-blue-600">COE</span>
             </div>
          </li>
-         <li className="hover:cursor-pointer border-b border-gray-200 ">
+         <li className="hover:cursor-pointer border-b border-gray-200 " onClick={()=> navigate("/HR-COC")}>
             <div className="flex items-center p-4 rounded-xs dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                <GrDocumentText className='w-4 h-4 pb-0.5' />
-               <span className="ms-1.5 whitespace-nowrap group-hover:text-blue-600 ">Request COC</span>
-               <span className=' ms-2 text-[0.7rem] rounded-full dark:bg-gray-700 dark:text-gray-300  bg-gray-300 pr-2 pl-2'>regular</span></div>
+               <span className="ms-1.5 whitespace-nowrap group-hover:text-blue-600 ">COC</span>
+            </div>
          </li>
-         <li className="hover:cursor-pointer border-b border-gray-200">
+         <li className="hover:cursor-pointer border-b border-gray-200" onClick={()=> navigate("/HR-CF1")}>
             <div className="flex items-center p-4 rounded-xs dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                <GrDocumentText className='w-4 h-4 pb-0.5' />
                <span className="flex-1 ms-1.5 whitespace-nowrap group-hover:text-blue-600">CF1</span>
             </div>
          </li>
-         <li className="hover:cursor-pointer border-b border-gray-200 ">
+         <li className="hover:cursor-pointer border-b border-gray-200 " onClick={()=> navigate("/HR-MonthPay")}>
             <div className={`flex items-center p-4 rounded-xs dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${location.pathname == "/PAY" && "bg-gray-100 dark:bg-gray-700" }` }
             >
                <GrDocumentText className='w-4 h-4 pb-0.5' />
-               <span className=" ms-1.5 group-hover:text-blue-600">13th Month Pay</span>
+               <span className=" ms-1.5 group-hover:text-blue-600">13<span className="inline-block align-text-top text-xs">th</span> Month Pay</span>
             </div>
          </li>
       </motion.ul>
@@ -159,8 +252,9 @@ function HRsideBar() {
         <p className='text-[0.7rem] font-bold text-gray-700 flex justify-start'>{empData.job_job_title}</p>
       </div>
     </motion.div>
+
   </DropdownMenuTrigger>
-  <DropdownMenuContent className='mb-3 w-56 sm:block hidden bg-slate-200' align='center'>
+  {/* <DropdownMenuContent className='mb-3 w-56 sm:block hidden bg-slate-200' align='center'>
     <DropdownMenuLabel>My Account</DropdownMenuLabel>
     <DropdownMenuSeparator />
     <DropdownMenuItem className='flex hover:cursor-pointer hover:bg-white ' onClick={() => openDialog()}>
@@ -170,13 +264,25 @@ function HRsideBar() {
          </div>
     </DropdownMenuItem>
   </DropdownMenuContent>
+  <DropdownMenuContent className='mb-3 w-56 sm:block hidden ' align='center'>
+    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+    <DropdownMenuSeparator />
+    {/* <DropdownMenuItem className='hover:cursor-pointer ' onClick={() => openNotifDialog()}>
+      <Bell />
+      <span>Notification</span>
+    </DropdownMenuItem>
+    <DropdownMenuItem className='hover:cursor-pointer ' onClick={() => openDialog()}>
+      <BiLogOutCircle />
+      <span>Logout</span>
+    </DropdownMenuItem>
+  </DropdownMenuContent>
 </DropdownMenu>
 
 
     
     
    </div>
-</aside>
+</aside> */}
 
 {/* content */}
 {/* <div className="p-4 sm:ml-64">
