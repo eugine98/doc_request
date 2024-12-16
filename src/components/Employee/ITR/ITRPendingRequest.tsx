@@ -3,6 +3,7 @@ import axios from 'axios'
 import { API_SERVER_URL } from '@/config';
 import useStore from '../LoginPage/store';
 import { useQuery } from '@tanstack/react-query';
+// import Loader from '@/components/Loader';
 // import { CiCircleCheck } from "react-icons/ci";
 import { BadgeCheck, CircleCheck, Ellipsis, Pencil, SearchX, Trash2, Trash2Icon, TriangleAlert, X } from 'lucide-react';
 import { CircleX } from 'lucide-react';
@@ -28,16 +29,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-//import { IoInformationCircleOutline } from 'react-icons/io5';
-// import { motion } from 'framer-motion';
-// interface intForEdit {
-//   status: string,
-//   date_resigned: string, 
-//   itr_year: string, 
-//   reason_request: string,
-// }
+import SkeletonComp from '@/components/Skeleton';
+
 function ITRPendingRequest() {
     const {empData} = useStore();
+    const [showLoader, setShowLoader] = useState(false)
     //const [prevEmpReq, setPrevEmpReq] = useState<intForEdit | undefined>(undefined);
     const reasonRef = useRef<HTMLTextAreaElement>(null);
     const dateResignedRef = useRef<HTMLInputElement>(null);
@@ -65,6 +61,7 @@ const fetch_pending_itr = async () => {
         //   };
         // setPrevEmpReq(myObject);
         // }
+        setShowLoader(false)
         return data;
     } catch (error) {
         console.error("Error fetching data:", error);
@@ -73,7 +70,9 @@ const fetch_pending_itr = async () => {
 };
 /////////////////////////////////
 //USEEFFECT//
+
 useEffect(() => {
+    setShowLoader(true)
     fetch_pending_itr();
     refetchPendingRequest();
 }, [])
@@ -242,6 +241,11 @@ const { data : pendingRequest, isLoading,  refetch : refetchPendingRequest } = u
   const years = Array.from({ length: currentYear - 1999 }, (_, i) => (2000 + i).toString());
   return (
     <>
+      <>
+        {showLoader && (
+          <SkeletonComp  />
+        )}
+      </>
       <div>
         <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
           <AlertDialogContent className='w-96'>
@@ -290,7 +294,7 @@ const { data : pendingRequest, isLoading,  refetch : refetchPendingRequest } = u
           </AlertDialogContent>
         </AlertDialog>
       </div>
-     <div className="flex items-center justify-center w-full bg-white dark:bg-gray-800">
+     <div className={`flex items-center justify-center w-full bg-white dark:bg-gray-800 ${showLoader && 'hidden'}`}>
         {!isLoading  && pendingRequest.code == 1 && pendingRequest.data.i_req_status != undefined ? (
         <div className='w-full md:flex md:justify-between lg:pl-10 lg:pr-10 pl-5 pr-5'
                style={{
@@ -299,7 +303,7 @@ const { data : pendingRequest, isLoading,  refetch : refetchPendingRequest } = u
         >
             <div 
             //className='relative md:w-1/2 w-full bg-blue-200 rounded-sm'
-            className={`relative md:w-1/2 w-full rounded-sm ${editMode && 'bg-blue-200'}`}
+            className={`relative md:w-1/2 w-full rounded-sm ${editMode && 'bg-blue-200 mt-2'}`}
             >
                 <div className='w-full absolute flex justify-end'>
                 <div className={`w-full flex justify-between p-3 pb-0 ${!editMode && 'hidden'}`}>
@@ -316,12 +320,12 @@ const { data : pendingRequest, isLoading,  refetch : refetchPendingRequest } = u
                   </button>
                 </div>
 
-                <div className='fixed top-24 flex'>
+                <div className='fixed top-28 mr-4'>
                 <DropdownMenu>
                   <DropdownMenuTrigger disabled={pendingRequest.data.i_req_status == undefined}>
-                    <Ellipsis className={`mt-4 mr-6 ${editMode && 'hidden'}`}/>
+                    <Ellipsis className={` ${editMode && 'hidden'}`}/>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className='-mt-1.5 mr-6'>
+                  <DropdownMenuContent className='mr-10 sm:mr-0 -mt-1.5'>
                   <DropdownMenuItem onClick={() => openEdit()}>
                     <Pencil />
                     <span>Edit</span>
@@ -444,7 +448,7 @@ const { data : pendingRequest, isLoading,  refetch : refetchPendingRequest } = u
             </form>
             </div>
             
-            <div className='relative md:ms-12 md:w-1/2 w-full pt-5'>
+            <div className={`relative md:ms-12 md:w-1/2 w-full pt-5 ${showLoader && 'hidden'}`}>
                 <div className='absolute w-full pt-5 p-10 md-p-0'>
                     <div className=' md:fixed md:top-32'>
                         <ul className='flex ms-6 mb-10 space-x-8 text-xs'>
@@ -515,8 +519,8 @@ const { data : pendingRequest, isLoading,  refetch : refetchPendingRequest } = u
             background: 'linear-gradient(0deg, rgba(255, 253, 253, 1) 25%, rgba(240, 240, 240, 1) 100%)',
           }} 
           >
-            <div className="text-xl mt-40">
-            <div className="flex justify-center">
+            <div className={`text-xl mt-40`}>
+            <div className={`flex justify-center`}>
                <SearchX className=" w-7 h-7 mb-1"/>
             </div>
             <p className='text-sm flex justify-center'>No results found!</p>

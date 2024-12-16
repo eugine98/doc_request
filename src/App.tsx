@@ -15,6 +15,8 @@ import COC from "./components/Employee/COC/COC";
 import HRCOC from "./components/HRStaff/COC/HRCOC";
 import HRCOE from "./components/HRStaff/COE/HRCOE";
 import Loader from "./components/Loader";
+import Loader2nd from "./components/Loader2nd";
+import Skeleton from "./components/Skeleton";
 
 
 function App() {
@@ -35,8 +37,9 @@ function App() {
       <Route path="/COC" element={<COC />} />
       <Route path="/ITR" element={<ITR2316 />} />
       <Route path="/13Month" element={<MonthPay />} />
-
       <Route path="/Loader" element={<Loader />} />
+      <Route path="/Loader2" element={<Loader2nd />} />
+      <Route path="/Skeleton" element={<Skeleton />} />
     </Routes>
   );
 }

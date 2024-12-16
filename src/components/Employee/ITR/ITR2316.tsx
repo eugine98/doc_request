@@ -10,17 +10,16 @@ import axios from "axios";
 import { useQuery } from '@tanstack/react-query';
 import useStore from '../LoginPage/store';
 import { GrDocumentText } from 'react-icons/gr';
-import Loader from '../../Loader';
 import ITRPendingRequest from './ITRPendingRequest';
 import { toast } from 'sonner';
 import { FaRegCheckCircle } from "react-icons/fa";
 import { MdErrorOutline } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
-import { Menu, NotebookPen } from 'lucide-react';
-// import { Bell } from 'lucide-react';
+import { NotebookPen } from 'lucide-react';
+import Loader2nd from '@/components/Loader2nd';
+// import idcsi from "../../assets/img/idcsi.png";
 
 const schema = z.object({
-  // id_no: z.string().min(1, { message: "Name is required." }),
   id_no: z.string().optional(),
   employee_name: z.string().min(1, { message: "Name is required." }),
   date_requested: z.string().refine(value => {
@@ -196,21 +195,21 @@ useEffect(() => {
   return (
     <>
         {showLoader && (
-          <Loader/>
+          <Loader2nd/>
         )}
         <div>
     <div>
         <SideBar />
     </div>
     
-    <div className="relative sm:ml-52 bg-white">
+    <div className="relative sm:ml-52 ml-16 bg-white">
       <div className="absolute w-full h-5 z-20">
         <div className='fixed top-0 border-l border border-gray-200 w-full '>
           <div className='flex border-b border-gray-200 bg-white'>
           
-          <Menu size={30} className='ms-3 mt-2.5 mr-1 sm:hidden bg-gray-200 rounded-sm p-0.5 hover:cursor-pointer hover:text-blue-800'/>
-          <NotebookPen size={25} className='ms-3 mt-2.5 mr-1 hidden sm:block'/>
-          <motion.p className="font-bold text-2xl w-full bg-white p-2 pl-0.5 flex justify-end sm:justify-start "
+          {/* <Menu size={30} className='ms-3 mt-2.5 mr-1 sm:hidden bg-gray-200 rounded-sm p-0.5 hover:cursor-pointer hover:text-blue-800'/> */}
+          <NotebookPen size={25} className='ms-3 mt-2.5 mr-1 '/>
+          <motion.p className="font-bold text-2xl w-full bg-white p-2 pl-0.5 "
           style={{ fontFamily: "Nunito, sans-serif"}}
         >
           ITR/2316
@@ -223,7 +222,7 @@ useEffect(() => {
            style={{fontFamily: "Poppins, sans-serif"}}
             >
               <li 
-              className={` pt-1 pb-1 hover:bg-gray-200 text-xs hover:cursor-pointer  ${currentPage == "request_form" && 'border-b-2 border-blue-600 text-blue-600'}`}
+              className={` pt-1 pb-1 pl-2 hover:bg-gray-200 text-xs hover:cursor-pointer  ${currentPage == "request_form" && 'border-b-2 border-blue-600 text-blue-600'}`}
               onClick={() => setCurrentPage("request_form")}>
                   <div className="flex items-center p-2 rounded-lg dark:text-white group w-40">
                   <GrDocumentText className='w-3.5 h-3.5' />
@@ -231,7 +230,7 @@ useEffect(() => {
                 </div>
               </li>
               <li 
-                className={`pt-1 pb-1 hover:bg-gray-200 text-xs hover:cursor-pointer  ${currentPage == "pending_request" && 'border-b-2 border-blue-600 text-blue-600'}`}
+                className={`pt-1 pb-1 pl-2 hover:bg-gray-200 text-xs hover:cursor-pointer  ${currentPage == "pending_request" && 'border-b-2 border-blue-600 text-blue-600'}`}
                 onClick={() => setCurrentPage("pending_request")}>
                 <div className="flex items-center p-2 rounded-lg dark:text-white group w-40">
                   <GrDocumentText className='w-3.5 h-3.5' />
@@ -257,7 +256,7 @@ useEffect(() => {
             <table className='border border-gray-200 text-center w-full text-gray-700 text-xs font-bold'
             style={{ fontFamily: "Nunito, sans-serif"}}
             >
-              <tr>
+              <tr className='text-[0.7rem]'>
                   <td className='border border-gray-200  item-center' rowSpan={2}>
                     <div className='flex justify-center'>
                     <img src="src\assets\img\idcsi.png" className="h-14 sm:h-10 lg:h-16 w-20 " alt="Logo" />
@@ -270,7 +269,7 @@ useEffect(() => {
                       ISMS-HR-FR-193
                   </td>
               </tr>
-              <tr>
+              <tr className='text-[0.7rem]'>
                   <td className='border border-gray-200' colSpan={2}>
                   Request for 2316/ ITR Form
                   </td>

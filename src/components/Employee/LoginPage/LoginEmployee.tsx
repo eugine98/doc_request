@@ -407,7 +407,7 @@ function LoginEmployee() {
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="employee">Employee</SelectItem>
-                                    <SelectItem value="hr">Hr</SelectItem>
+                                    <SelectItem value="hr">Hr/Accounting</SelectItem>
                                 </SelectContent>
                             </Select>
                             </div>

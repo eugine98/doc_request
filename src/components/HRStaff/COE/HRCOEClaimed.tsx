@@ -385,6 +385,11 @@ import {
       fetch_count_pending_coe_for_hr();
       fetch_pending_coe_for_hr();
     }, [page_, forSearch, filterBy])
+    useEffect(() => {
+      if(forSearch != ''){
+        setPage(0)
+      }
+    }, [forSearch])
     
     const next = () => {
       if ((page_ + 1) * rowsPerPage < itrCount) {
@@ -455,13 +460,13 @@ import {
             </DropdownMenuContent>
           </DropdownMenu>
           <Input
-            placeholder={filterBy.slice(2) + ' . . .'}
+            placeholder={filterBy.slice(2) + '.....'}
             // value={(table.getColumn(filterBy)?.getFilterValue() as string) ?? ""}
             // onChange={(event) =>
             //   table.getColumn(filterBy)?.setFilterValue(event.target.value)
             // }
             onChange={(e) => setForSearch(e.target.value)}
-            className="max-w-sm"
+            className="max-w-sm me-1"
           />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

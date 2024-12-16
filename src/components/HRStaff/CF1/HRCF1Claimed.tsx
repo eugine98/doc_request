@@ -11,25 +11,17 @@ import {
     getSortedRowModel,
     useReactTable,
   } from "@tanstack/react-table";
-  // import { Textarea } from "@/components/ui/textarea"
-  // import { Label } from "@/components/ui/label"
   import { BadgeCheck, ChevronDown, Trash2 } from "lucide-react";
   import { IoEye } from "react-icons/io5";
-  // import { MdEdit, MdErrorOutline } from "react-icons/md";
   import { useEffect, useState } from "react";
-  // import { useQuery } from "@tanstack/react-query";
   import { API_SERVER_URL } from "@/config";
   import { Button } from "@/components/ui/button";
   import { toast } from 'sonner';
-  // import { X } from 'lucide-react';
-  // import useStore from "@/components/Employee/LoginPage/store";
   import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuItem,
-    // DropdownMenuLabel,
-    // DropdownMenuSeparator,
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu";
   import {
@@ -41,14 +33,8 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    // AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
-  // import {
-  //   Accordion,
-  //   AccordionContent,
-  //   AccordionItem,
-  //   AccordionTrigger,
-  // } from "@/components/ui/accordion"
+
   import {
     Tooltip,
     TooltipContent,
@@ -70,11 +56,8 @@ import {
   import {
     Dialog,
     DialogContent,
-    // DialogDescription,
     DialogHeader,
-    // DialogTitle,
     DialogTrigger,
-    // DialogFooter,
   } from "@/components/ui/dialog"
   
   export type PendingITR = {
@@ -379,6 +362,12 @@ import {
       fetch_pending_cf1_for_hr();
     }, [page_, forSearch, filterBy])
     
+    useEffect(() => {
+      if(forSearch != ''){
+        setPage(0)
+      }
+    }, [forSearch])
+    
     const next = () => {
       if ((page_ + 1) * rowsPerPage < itrCount) {
         setPage(prevPage => prevPage + 1);
@@ -446,13 +435,13 @@ import {
             </DropdownMenuContent>
           </DropdownMenu>
           <Input
-            placeholder={filterBy.slice(2) + ' . . .'}
+            placeholder={filterBy.slice(2) + '.....'}
             // value={(table.getColumn(filterBy)?.getFilterValue() as string) ?? ""}
             // onChange={(event) =>
             //   table.getColumn(filterBy)?.setFilterValue(event.target.value)
             // }
             onChange={(e) => setForSearch(e.target.value)}
-            className="max-w-sm"
+            className="max-w-sm me-1"
           />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

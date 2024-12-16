@@ -256,64 +256,58 @@ useEffect(() => {
     
       <div className='bg-[]'>
 {/* sidebar */}
-<aside id="logo-sidebar" className="fixed top-0 left-0 z-40 w-52 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar"
+<aside id="logo-sidebar" className="fixed top-0 left-0 z-40 sm:w-52 w-16 h-screen transition-transform -translate-x-0 sm:translate-x-0" aria-label="Sidebar"
    // style={{ fontFamily: "Nunito, sans-serif"}}
    style={{
-      // backgroundColor: '#0093E9',
-      // backgroundImage: 'linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)',
-      // background: 'rgb(0, 127, 255)', // Fallback background color (solid blue)
-      // backgroundImage: 'linear-gradient(0deg, rgba(0, 127, 255, 1) 25%, rgba(137, 207, 240, 1) 100%)' // Gradient from blue to light blue
-      // background: 'rgb(150, 0, 24)', // Fallback background color (dark red)
-      // backgroundImage: 'linear-gradient(0deg, rgba(150, 0, 24, 1) 25%, rgba(255, 8, 0, 1) 100%)' // Gradient from dark red to 
       background: 'linear-gradient(0deg, rgba(0,34,68,1) 25%, rgba(0,70,135,1) 100%)',
   }}
 >
 <div className="h-full px-2 py-1.5 overflow-y-auto  dark:bg-gray-800 ">
-      <motion.div className="flex flex-col rounded-sm pb-2 bg-slate-200"
+      <motion.div className="flex flex-col rounded-sm sm:pb-2 bg-slate-200"
       style={{ 
          boxShadow: 'rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px'
       }}
       >
          <div className='flex justify-center'>
-            <img src="src\assets\img\fpo2.png" className=" pt-2" alt="Logo"/>
+            <img src="src\assets\img\fpo2.png" className=" sm:pt-2 p-0.5" alt="Logo"/>
          </div>
-         <motion.p className="self-center font-semibold whitespace-nowrap dark:text-white z-20 text-[0.8rem] text-gray-800 pt-1.5 pb-0.5" style={{fontFamily: "Poppins, sans-serif"}}>Document Request</motion.p>
+         <motion.p className="self-center font-semibold whitespace-nowrap hidden sm:block dark:text-white z-20 text-[0.8rem] text-gray-800 pt-1.5 pb-0.5" style={{fontFamily: "Poppins, sans-serif"}}>Document Request</motion.p>
       </motion.div>
-      <motion.ul  className="text-xs  text-gray-900 mt-4" style={{ fontFamily: "Fredoka, sans-serif"}}>
-        <li className="hover:cursor-pointer pt-[0.03rem] pb-[0.03rem]" onClick={()=> navigate("/ITR")}>
-            <div className={`flex items-center p-2 rounded-md hover:bg-slate-200 hover:shadow-sm group hover:text-black ${location.pathname == "/ITR" ? "bg-gray-200 shadow-md font-semibold text-gray-950" : 'text-white' }`}>
-               <NotebookPen strokeWidth={location.pathname === '/ITR' ? 3 : undefined} className='w-4 h-4 pb-0.5'/>
-               <span className="flex-1 ms-1.5 whitespace-nowrap ">ITR/2316</span>
+      <motion.ul  className="text-[0.65rem] sm:text-xs  text-gray-900 sm:mt-4 mt-7" style={{ fontFamily: "Fredoka, sans-serif"}}>
+        <li className="hover:cursor-pointer pt-[0.03rem] pb-[0.04rem]  sm:border-none" onClick={()=> navigate("/ITR")}>
+            <div className={`flex items-center sm:p-2 p-2 sm:rounded-md rounded-sm hover:bg-slate-200 hover:shadow-sm group hover:text-black ${location.pathname == "/ITR" ? "bg-gray-200 shadow-md font-semibold text-gray-950" : 'text-white' }`}>
+               <NotebookPen strokeWidth={location.pathname === '/ITR' ? 3 : undefined} className='w-4 h-4 pb-0.5 hidden sm:block'/>
+               <span className="flex-1 sm:ms-1.5 whitespace-nowrap ">ITR</span> 
                </div>
          </li>
-         <li className="hover:cursor-pointer pt-[0.03rem] pb-[0.03rem] " onClick={()=> navigate("/COE")}>
+         <li className="hover:cursor-pointer pt-[0.03rem] pb-[0.03rem]  sm:border-none" onClick={()=> navigate("/COE")}>
             <div 
-            className={`flex items-center p-2 rounded-md hover:bg-slate-200 hover:shadow-sm group hover:text-black ${location.pathname == "/COE" ? "bg-gray-200 shadow-md font-semibold text-gray-950" : 'text-white' }` }
+            className={`flex items-center sm:p-2 p-2 sm:rounded-md rounded-sm hover:bg-slate-200 hover:shadow-sm group hover:text-black ${location.pathname == "/COE" ? "bg-gray-200 shadow-md font-semibold text-gray-950" : 'text-white' }` }
             >
-               <NotebookPen strokeWidth={location.pathname === '/COE' ? 3 : undefined}  className='w-4 h-4 pb-0.5'/>
-               <span className=" ms-1.5 ">COE</span>
+               <NotebookPen strokeWidth={location.pathname === '/COE' ? 3 : undefined}  className='w-4 h-4 pb-0.5 hidden sm:block'/>
+               <span className=" sm:ms-1.5 ">COE</span>
             </div>
          </li>
-         <li className="hover:cursor-pointer pt-[0.03rem] pb-[0.03rem] " onClick={()=> navigate("/COC")}>
-            <div className={`flex items-center p-2 rounded-md hover:bg-slate-200 hover:shadow-sm group hover:text-black ${location.pathname == "/COC" ? "bg-gray-200 shadow-md font-semibold text-gray-950" : 'text-white' }` }
+         <li className="hover:cursor-pointer pt-[0.03rem] pb-[0.04rem]  sm:border-none" onClick={()=> navigate("/COC")}>
+            <div className={`flex items-center sm:p-2 p-2 sm:rounded-md rounded-sm hover:bg-slate-200 hover:shadow-sm group hover:text-black ${location.pathname == "/COC" ? "bg-gray-200 shadow-md font-semibold text-gray-950" : 'text-white' }` }
             >
-               <NotebookPen strokeWidth={location.pathname === '/COC' ? 3 : undefined}  className='w-4 h-4 pb-0.5' />
-               <span className="ms-1.5 whitespace-nowrap  mr-5">COC</span>
+               <NotebookPen strokeWidth={location.pathname === '/COC' ? 3 : undefined}  className='w-4 h-4 pb-0.5 hidden sm:block' />
+               <span className="sm:ms-1.5 whitespace-nowrap mr-5">COC</span>
                </div>
          </li>
-         <li className="hover:cursor-pointer pt-[0.03rem] pb-[0.03rem] " onClick={()=> navigate("/CF1")}>
-            <div  className={`flex items-center p-2 rounded-md hover:bg-slate-200 hover:shadow-sm group hover:text-black ${location.pathname == "/CF1" ? "bg-gray-200 shadow-md font-semibold text-gray-950" : 'text-white' }` }
+         <li className="hover:cursor-pointer pt-[0.03rem] pb-[0.03rem]  sm:border-none" onClick={()=> navigate("/CF1")}>
+            <div  className={`flex items-center sm:p-2 p-2 sm:rounded-md rounded-sm hover:bg-slate-200 hover:shadow-sm group hover:text-black ${location.pathname == "/CF1" ? "bg-gray-200 shadow-md font-semibold text-gray-950" : 'text-white' }` }
             >
-               <NotebookPen strokeWidth={location.pathname === '/CF1' ? 3 : undefined}  className='w-4 h-4 pb-0.5' />
-               <span className="flex-1 ms-1.5 whitespace-nowrap ">CF1</span>
+               <NotebookPen strokeWidth={location.pathname === '/CF1' ? 3 : undefined}  className='w-4 h-4 pb-0.5 hidden sm:block' />
+               <span className="flex-1 sm:ms-1.5 whitespace-nowrap ">CF1</span>
             </div>
          </li>
-         <li className="hover:cursor-pointer pt-[0.03rem] pb-[0.03rem]  " onClick={()=> navigate("/13Month")}>
+         <li className="hover:cursor-pointer pt-[0.03rem] pb-[0.03rem] " onClick={()=> navigate("/13Month")}>
             <div 
-            className={`flex items-center p-2 rounded-md hover:bg-slate-200 hover:shadow-sm group hover:text-black ${location.pathname == "/13Month" ? "bg-gray-200 shadow-md font-semibold text-gray-950" : 'text-white' }` }
+            className={`flex items-center sm:p-2 p-2 sm:rounded-md rounded-sm hover:bg-slate-200 hover:shadow-sm group hover:text-black ${location.pathname == "/13Month" ? "bg-gray-200 shadow-md font-semibold text-gray-950" : 'text-white' }` }
             >
-               <NotebookPen strokeWidth={location.pathname === '/13Month' ? 3 : undefined}  className='w-4 h-4 pb-0.5'/>
-               <span className=" ms-1.5 ">13<span className="inline-block align-text-top text-xs">th</span> Month Pay</span>
+               <NotebookPen strokeWidth={location.pathname === '/13Month' ? 3 : undefined}  className='w-4 h-4 pb-0.5 hidden sm:block'/>
+               <span className=" sm:ms-1.5 ">13<span className="inline-block align-text-top text-[0.55rem]">th</span> Month Pay</span>
             </div>
          </li>
       </motion.ul>
@@ -321,7 +315,7 @@ useEffect(() => {
    <div className='w-full fixed bottom-0 pt-1 pb-4 pl-2 flex z-20 shadow-lg border-t border-blue-950 bg-[#082444]'>
    
    <Dialog open={isOpenNotif} onOpenChange={setIsOpenNotif}>
-   <DialogContent className='w-1/2'>
+   <DialogContent className='w-3/4 ]'>
       <DialogHeader>
          <DialogTitle>
          < div className='flex'>
@@ -343,9 +337,9 @@ useEffect(() => {
       <Tabs defaultValue="account" className="w-full h-[500px]">
       <div className="sticky -top-0.5 z-10 bg-white">
       <TabsList className='w-full flex justify-start'>
-        <TabsTrigger value="account" className='w-1/4 flex justify-start' onClick={() => refetch_docs_for_claim()}>For Claim</TabsTrigger>
-        <TabsTrigger value="password" className='w-1/4 flex justify-start' onClick={() => refetch_docs_rejected()}>Rejected</TabsTrigger>
-        <TabsTrigger value="test" className='w-1/4 flex justify-start' onClick={() => refetch_docs_rejected()}>History</TabsTrigger>
+        <TabsTrigger value="account" className='w-1/4 flex justify-start text-[0.7rem] sm:text-xs' onClick={() => refetch_docs_for_claim()}>For Claim</TabsTrigger>
+        <TabsTrigger value="password" className='w-1/4 flex justify-start text-[0.7rem] sm:text-xs' onClick={() => refetch_docs_rejected()}>Rejected</TabsTrigger>
+        <TabsTrigger value="test" className='w-1/4 flex justify-start text-[0.7rem] sm:text-xs' onClick={() => refetch_docs_rejected()}>History</TabsTrigger>
       </TabsList>
     </div>
 
@@ -370,7 +364,7 @@ useEffect(() => {
                                    <div className='flex ' >
                                          <Bell className=' h-7 w-7 rounded-full border border-gray-600 p-1 text-gray-700 me-1 '/> 
                                       <div className='w-fit mt-1 '>
-                                         <p className='text-xs'>{doc.doc_type} <span className='text-gray-500'> - Claim and sign the receiving copy.</span> </p>
+                                         <p className='text-[0.65rem] sm:text-xs'>{doc.doc_type} <span className='text-gray-500'> - Claim and sign the receiving copy.</span> </p>
                                          <p className='text-[10px] text-gray-500'> {doc.date_for_claim}</p>
                                       </div>
                                    </div>
@@ -403,16 +397,13 @@ useEffect(() => {
                docs_rejected.map((doc: InterfaceForClaim) => (
                   <li className='  p-2 hover:shadow-xl hover:bg-gray-50' key={doc.id}> 
                      <div className='flex justify-between'>
-                        <div className='flex ' >
-                         
+                        <div className='flex' >
                               <Bell className=' h-7 w-7 rounded-full border border-gray-600 p-1 text-gray-700 me-1'/> 
-                   
                            <div className='w-fit mt-1'>
-                              <p className='text-xs'>{doc.doc_type} request <span className='text-gray-500'> Got rejected!</span> </p>
-                              <p className='text-[10px] text-gray-500'>{doc.date_rejected}</p>
+                              <p className='text-xs'>{doc.doc_type} request <span className='text-[0.65rem] sm:text-xs text-gray-500'> Got rejected!</span> </p>
+                              <p className='text-gray-500 text-[0.63rem] sm:text-xs'>{doc.date_rejected}</p>
                            </div>
                         </div>
-                       
                            <DropdownMenu>
                               <DropdownMenuTrigger>
                                     <p className='font-black me-2 text-xs hover:cursor-pointer text-gray-600 -mt-8 hover:text-gray-500'>...</p>
@@ -424,7 +415,7 @@ useEffect(() => {
 
                      </div>
                      <div className=' ms-11 col-span-2 border border-gray-200 rounded-md mt-1 h-fit flex justify-start'>
-                        <p className='text-sm p-0.5 min-h-10 ms-1 font-medium'>
+                        <p className='text-xs p-0.5 min-h-10 ms-1 font-medium'>
                            {doc.reason_for_reject}
                         </p>
                      </div>   
@@ -461,7 +452,7 @@ useEffect(() => {
                                    <div className='flex ' >
                                          <Bell className=' h-7 w-7 rounded-full border border-gray-600 p-1 text-gray-700 me-1 '/> 
                                       <div className='w-fit mt-1 '>
-                                         <p className='text-xs'>{doc.doc_type} <span className='text-gray-500'>Claimed!</span> </p>
+                                         <p  className='text-[0.65rem] sm:text-xs'>{doc.doc_type} <span className='text-gray-500'>Claimed!</span> </p>
                                          <p className='text-[10px] text-gray-500'> {doc.date_for_claim}</p>
                                       </div>
                                    </div>
@@ -493,23 +484,16 @@ useEffect(() => {
   <DropdownMenuTrigger>
    <div className='flex w-full '>
    <motion.div className='group flex hover:cursor-pointer mt-3'>
-      <img src={empData.picture_location} className="h-6 rounded-full me-2 sm:h-8" alt="logo"/>
-      <div className='mt-1'>
+      <img src={empData.picture_location} className="h-8 ms-1.5 sm:ms-0 rounded-full me-2 " alt="logo"/>
+      <div className='mt-1 hidden sm:block'>
         <p className='font-bold text-[0.60rem]  group flex justify-start text-gray-400'>{empData.first_name} {empData.last_name}</p>
         <p className='text-[0.50rem] font-bold text-gray-500 flex justify-start'>{empData.job_job_title}</p>
       </div>
     </motion.div>
-    
-      {/* <div className='relative w-4 h-5 ms-1'>
-          <Bell className='w-4 h-5 absolute' />
-         {hasNotif && (
-               <div className='h-2 w-2 absolute -top-0.5 right-0 rounded-full bg-orange-600 animate-pulse'/>
-         )}
-      </div> */}
     </div>
  
   </DropdownMenuTrigger>
-  <DropdownMenuContent className='w-52 sm:block hidden ' align='center'>
+  <DropdownMenuContent className='w-52' align='center'>
     <DropdownMenuLabel>My Account</DropdownMenuLabel>
     <DropdownMenuSeparator />
     <DropdownMenuItem className='hover:cursor-pointer ' onClick={() => openNotifDialog()}>

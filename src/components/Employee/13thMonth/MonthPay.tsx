@@ -199,7 +199,7 @@ const { data: empDataFromBackend, isLoading: empDataLoading, refetch: refetchEmp
 <div>
     <SideBar />
 </div>
-  <div className="relative sm:ml-52 bg-white ">
+  <div className="relative sm:ml-52 ml-16 bg-white ">
       <div className="absolute w-full h-5 ">
       {/* <div className=" w-full h-6 bg-white fixed top-0">
 
@@ -208,31 +208,31 @@ const { data: empDataFromBackend, isLoading: empDataLoading, refetch: refetchEmp
       <div className="absolute w-full h-5 z-20">
       <div className='fixed top-0 border-l border border-gray-200 w-full '>
         <div className="flex border-b border-gray-200 bg-white">
-        <NotebookPen size={25} className='ms-3 mt-2.5 mr-1 hidden sm:block'/>
-        <motion.p className="font-bold text-2xl w-full bg-white p-2 pl-0.5 flex justify-end sm:justify-start"
+        <NotebookPen size={25} className='ms-3 mt-2.5 mr-1 '/>
+        <motion.p className="font-bold text-2xl w-full bg-white p-2 pl-0.5 flex "
           style={{ fontFamily: "Nunito, sans-serif"}}
         >
-          13<span className="inline-block align-text-top text-sm me-1">th</span> MONTH PAY
+          13<span className="inline-block align-text-top text-xs me-1">th</span> MONTH PAY
         </motion.p>
         </div>
 
       <div className=' w-full bg-white'>
     <div>
-    <ul className='flex text-sm font-medium '
+    <ul className='flex text-sm font-medium'
            style={{fontFamily: "Poppins, sans-serif"}}
             >
               <li 
-              className={` pt-1 pb-1 hover:bg-gray-200 text-xs hover:cursor-pointer  ${currentPage == "request_form" && 'border-b-2 border-blue-600 text-blue-600'}`}
+              className={` pt-1 pb-1 pl-2 hover:bg-gray-200 text-xs hover:cursor-pointer  ${currentPage == "request_form" && 'border-b-2 border-blue-600 text-blue-600'}`}
               onClick={() => setCurrentPage("request_form")}>
                   <div className="flex items-center p-2 rounded-lg dark:text-white group w-40">
                   <GrDocumentText className='w-3.5 h-3.5' />
-                  <span className="flex-1 ms-1 whitespace-nowrap mt-1.5">13<span className="inline-block align-text-top text-xs">th</span> Month Form</span>
+                  <span className="flex-1 ms-1 whitespace-nowrap mt-1.5">13th Month Form</span>
                 </div>
               </li>
               <li 
-                className={`pt-1 pb-1 hover:bg-gray-200 text-xs hover:cursor-pointer  ${currentPage == "pending_request" && 'border-b-2 border-blue-600 text-blue-600'}`}
+                className={`pt-1 pb-1 pl-2 hover:bg-gray-200 text-xs hover:cursor-pointer  ${currentPage == "pending_request" && 'border-b-2 border-blue-600 text-blue-600'}`}
                 onClick={() => setCurrentPage("pending_request")}>
-                <div className="flex items-center p-2 rounded-lg dark:text-white  group w-40">
+                <div className="flex items-center p-2 rounded-lg dark:text-white group w-40">
                   <GrDocumentText className='w-3.5 h-3.5' />
                   <span className="flex-1 ms-1 whitespace-nowrap mt-1.5">Pending Request</span>
                 </div>
@@ -256,7 +256,7 @@ const { data: empDataFromBackend, isLoading: empDataLoading, refetch: refetchEmp
                <table className='border border-gray-200 text-center w-full text-gray-700 text-xs font-bold'
                style={{ fontFamily: "Nunito, sans-serif"}}
                >
-                 <tr>
+                 <tr className='text-[0.7rem]'>
                      <td className='border border-gray-200  item-center' rowSpan={2}>
                        <div className='flex justify-center'>
                        <img src="src\assets\img\idcsi.png" className="h-14 sm:h-10 lg:h-16 w-20 " alt="Logo" />
@@ -269,7 +269,7 @@ const { data: empDataFromBackend, isLoading: empDataLoading, refetch: refetchEmp
                          ISMS-HR-FR-195
                      </td>
                  </tr>
-                 <tr>
+                 <tr className='text-[0.7rem]'>
                      <td className='border border-gray-200' colSpan={2}>
                      REQUEST FOR 13<span className="inline-block align-text-top text-xs">th</span> MONTH PAY FORM
                      </td>

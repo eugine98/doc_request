@@ -28,9 +28,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import SkeletonComp from '@/components/Skeleton';
 
 function MonthPayPending() {
   const {empData} = useStore();
+  const [showLoader, setShowLoader] = useState(false)
   const reasonRef = useRef<HTMLTextAreaElement>(null);
   const dateResignedRef = useRef<HTMLInputElement>(null);
   const TMYearRef = useRef<HTMLSelectElement>(null);
@@ -60,6 +62,7 @@ const fetch_pending_thirteen = async () => {
       //   };
       // setPrevEmpReq(myObject);
       // }
+      setShowLoader(false)
       return data;
   } catch (error) {
       console.error("Error fetching data:", error);
@@ -79,6 +82,7 @@ const fetch_pending_thirteen = async () => {
     fetch_pending_thirteen();
   }, [])
   useEffect(() => {
+    setShowLoader(true)
     fetch_pending_thirteen();
     refetchPendingRequest();
   }, [pendingRequest, isLoading])
@@ -206,6 +210,11 @@ const fetch_pending_thirteen = async () => {
   const years = Array.from({ length: currentYear - 1999 }, (_, i) => (2000 + i).toString());
   return (
   <>
+        <>
+        {showLoader && (
+          <SkeletonComp  />
+        )}
+      </>
       <div>
         <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
           <AlertDialogContent className='w-96'>
@@ -255,7 +264,7 @@ const fetch_pending_thirteen = async () => {
         </AlertDialog>
       </div>
 
-      <div className="flex items-center justify-center w-full bg-white dark:bg-gray-800">
+      <div className={`flex items-center justify-center w-full bg-white dark:bg-gray-800 ${showLoader && 'hidden'}`}>
         {!isLoading && pendingRequest.code == 1 && pendingRequest.data.tm_req_status != undefined ? (
         <div className='w-full md:flex md:justify-between lg:pl-10 lg:pr-10 pl-5 pr-5'
         style={{
@@ -264,7 +273,7 @@ const fetch_pending_thirteen = async () => {
         >
             <div 
             //className='relative md:w-1/2 w-full bg-blue-200 rounded-sm'
-            className={`relative md:w-1/2 w-full rounded-sm ${editMode && 'bg-blue-200'}`}
+            className={`relative md:w-1/2 w-full rounded-sm ${editMode && 'bg-blue-200 mt-2'}`}
             >
                 <div className='w-full absolute flex justify-end'>
                 <div className={`w-full flex justify-between p-3 pb-0 ${!editMode && 'hidden'}`}>
@@ -281,12 +290,12 @@ const fetch_pending_thirteen = async () => {
                   </button>
                 </div>
 
-                <div className='fixed top-24 flex'>
+                <div className='fixed top-28 mr-4'>
                 <DropdownMenu>
                   <DropdownMenuTrigger>
-                  <Ellipsis className={`mt-4 mr-6 ${editMode && 'hidden'}`}/>
+                  <Ellipsis className={`${editMode && 'hidden'}`}/>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className='-mt-1.5 mr-6'>
+                  <DropdownMenuContent className='mr-10 sm:mr-0 -mt-1.5'>
                   <DropdownMenuItem 
                   onClick={() => openEdit()}
                   >
@@ -386,7 +395,7 @@ const fetch_pending_thirteen = async () => {
                   )}
                     
                 <div>
-                      <label htmlFor="thirteen_month_year" className="block">13<span className="inline-block align-text-top text-xs">th</span> Month Pay for the year:</label>
+                      <label htmlFor="thirteen_month_year" className="block">13<span className="inline-block align-text-top text-[0.55rem]">th</span> Month Pay for the year:</label>
                   <select
                     required
                     id="thirteen_month_year"
@@ -475,7 +484,7 @@ const fetch_pending_thirteen = async () => {
             background: 'linear-gradient(0deg, rgba(255, 253, 253, 1) 25%, rgba(240, 240, 240, 1) 100%)',
           }} 
           >
-            <div className="text-xl mt-40">
+            <div className={`text-xl mt-40`}>
             <div className="flex justify-center">
                <SearchX className=" w-7 h-7 mb-1"/>
             </div>
