@@ -123,8 +123,8 @@ function SideBar() {
       }, 1800000); 
    };
    const fetch_for_claim_ITR = async () => {
-      //alert(empData.first_name+ " " +empData.last_name)
       try {
+         
         const formdata = new FormData();
         formdata.append("employee_name", empData.first_name+ " " +empData.last_name);
         formdata.append("emp_status", empData.status);
@@ -145,6 +145,38 @@ function SideBar() {
     const { data: docs_for_claim, isLoading: docs_for_claim_is_loading, refetch: refetch_docs_for_claim } = useQuery ({
       queryKey: ['docs_for_claim'],
       queryFn: () => fetch_for_claim_ITR(),
+      staleTime: 10 * 1000,
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
+      refetchOnMount: true,
+      retry: 3
+      // refetchInterval: 1500
+      // refetchIntervalInBackground: true,
+    });
+
+    const fetch_claimed_ITR = async () => {
+      try {
+         
+        const formdata = new FormData();
+        formdata.append("employee_name", empData.first_name+ " " +empData.last_name);
+        formdata.append("emp_status", empData.status);
+        formdata.append("id_no", empData.idno);
+        const response = await axios.post(
+          `${API_SERVER_URL}/Api/fetch_claimed_ITR`,
+          formdata
+        );
+      console.log("EMP DATA", empData.idno)
+      console.log("DATA FOR CLAIM: ", response.data)
+      return response.data;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        throw error; // Re-throw to allow react-query to handle the error
+      }
+    };
+
+    const { data: docs_claimed, isLoading: docs_claimed_is_loading, refetch: refetch_docs_claimed } = useQuery ({
+      queryKey: ['docs_for_claim'],
+      queryFn: () => fetch_claimed_ITR(),
       staleTime: 10 * 1000,
       refetchOnWindowFocus: true,
       refetchOnReconnect: true,
@@ -183,6 +215,7 @@ function SideBar() {
       // refetchInterval: 2500,
       // refetchIntervalInBackground: true,
     });
+
     const remove_notif = async (id: string) => {
       try {
         const formdata = new FormData();
@@ -232,7 +265,6 @@ useEffect(() => {
      setHasNotif(false); // Optionally reset the state if there's no notification
    }
  }, [docs_rejected, docs_for_claim]);
-
 
   return (
     <>
@@ -315,7 +347,7 @@ useEffect(() => {
    <div className='w-full fixed bottom-0 pt-1 pb-4 pl-2 flex z-20 shadow-lg border-t border-blue-950 bg-[#082444]'>
    
    <Dialog open={isOpenNotif} onOpenChange={setIsOpenNotif}>
-   <DialogContent className='w-3/4 ]'>
+   <DialogContent className='w-3/4 rounded-md'>
       <DialogHeader>
          <DialogTitle>
          < div className='flex'>
@@ -337,9 +369,9 @@ useEffect(() => {
       <Tabs defaultValue="account" className="w-full h-[500px]">
       <div className="sticky -top-0.5 z-10 bg-white">
       <TabsList className='w-full flex justify-start'>
-        <TabsTrigger value="account" className='w-1/4 flex justify-start text-[0.7rem] sm:text-xs' onClick={() => refetch_docs_for_claim()}>For Claim</TabsTrigger>
+        <TabsTrigger value="account" className='w-1/4 flex justify-start text-[0.7rem] sm:text-xs' onClick={() => { refetch_docs_for_claim();}}>For Claim</TabsTrigger>
         <TabsTrigger value="password" className='w-1/4 flex justify-start text-[0.7rem] sm:text-xs' onClick={() => refetch_docs_rejected()}>Rejected</TabsTrigger>
-        <TabsTrigger value="test" className='w-1/4 flex justify-start text-[0.7rem] sm:text-xs' onClick={() => refetch_docs_rejected()}>History</TabsTrigger>
+        <TabsTrigger value="test" className='w-1/4 flex justify-start text-[0.7rem] sm:text-xs' onClick={() => {refetch_docs_claimed();}}>History</TabsTrigger>
       </TabsList>
     </div>
 
@@ -400,23 +432,23 @@ useEffect(() => {
                         <div className='flex' >
                               <Bell className=' h-7 w-7 rounded-full border border-gray-600 p-1 text-gray-700 me-1'/> 
                            <div className='w-fit mt-1'>
-                              <p className='text-xs'>{doc.doc_type} request <span className='text-[0.65rem] sm:text-xs text-gray-500'> Got rejected!</span> </p>
-                              <p className='text-gray-500 text-[0.63rem] sm:text-xs'>{doc.date_rejected}</p>
+                              <p className='text-[0.65rem] sm:text-xs'>{doc.doc_type} request <span className='text-[0.65rem] sm:text-xs text-gray-500'> Got rejected!</span> </p>
+                              <p className='text-gray-500 text-[0.63rem]'>{doc.date_rejected}</p>
                            </div>
                         </div>
                            <DropdownMenu>
                               <DropdownMenuTrigger>
                                     <p className='font-black me-2 text-xs hover:cursor-pointer text-gray-600 -mt-8 hover:text-gray-500'>...</p>
                               </DropdownMenuTrigger>
-                              <DropdownMenuContent className=' -mt-6'>
+                              <DropdownMenuContent className=' -mt-7'>
                                  <DropdownMenuItem className='hover:cursor-pointer text-[11px]' onClick={() => remove_notif(doc.id)}>Remove Notification</DropdownMenuItem>
                               </DropdownMenuContent>
                            </DropdownMenu>
 
                      </div>
                      <div className=' ms-11 col-span-2 border border-gray-200 rounded-md mt-1 h-fit flex justify-start'>
-                        <p className='text-xs p-0.5 min-h-10 ms-1 font-medium'>
-                           {doc.reason_for_reject}
+                        <p className='text-[0.7rem] p-0.5 min-h-10 ms-1'>
+                           from HR : <br />  {doc.reason_for_reject}
                         </p>
                      </div>   
 
@@ -442,22 +474,28 @@ useEffect(() => {
       <TabsContent value="test">
     <ScrollArea >
        <ul className='w-full space-y-2 pt-2 h-[450px]' style={{fontFamily: "Poppins, sans-serif"}}>
-         {!docs_for_claim_is_loading ? (
-            docs_for_claim.length > 0 ? (
-               docs_for_claim.map((doc: InterfaceForClaim) => (
-                                <li className='  p-2 group hover:shadow-md' onClick={() => { 
-                                 doc.doc_type == "ITR" ? navigate("/ITR") : doc.doc_type == "COE" && navigate("/COE"); 
-                                 setIsOpenNotif(false);}} key={doc.id}> 
-                                <div className='flex justify-between group-hover:cursor-pointer'>
-                                   <div className='flex ' >
-                                         <Bell className=' h-7 w-7 rounded-full border border-gray-600 p-1 text-gray-700 me-1 '/> 
-                                      <div className='w-fit mt-1 '>
-                                         <p  className='text-[0.65rem] sm:text-xs'>{doc.doc_type} <span className='text-gray-500'>Claimed!</span> </p>
-                                         <p className='text-[10px] text-gray-500'> {doc.date_for_claim}</p>
-                                      </div>
-                                   </div>
-                                </div>
-                          </li>
+         {!docs_claimed_is_loading ? (
+            docs_claimed.length > 0 ? (
+               docs_claimed.map((doc: InterfaceForClaim) => (
+                  <li className='  p-2 group hover:shadow-md' > 
+                     <div className='flex justify-between'>
+                        <div className='flex'>
+                           <Bell className=' h-7 w-7 rounded-full border border-gray-600 p-1 text-gray-700 me-1 '/> 
+                           <div className='w-fit mt-1'>
+                              <p  className='text-[0.65rem] sm:text-xs'>{doc.doc_type} <span className='text-gray-500'>Claimed!</span> </p>
+                              <p className='text-[10px] text-gray-500'> {doc.date_for_claim}</p>
+                           </div>
+                        </div>
+                        {/* <DropdownMenu>
+                              <DropdownMenuTrigger>
+                                    <p className='font-black text-xs hover:cursor-pointer text-gray-600 -mt-8 hover:text-gray-500 mr-7'>...</p>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent className=' -mt-7'>
+                                 <DropdownMenuItem className='hover:cursor-pointer text-[11px]' onClick={() => remove_notif(doc.id)}>Remove Notification</DropdownMenuItem>
+                              </DropdownMenuContent>
+                           </DropdownMenu> */}
+                     </div>
+                  </li>
                 ))
             ):(
                <div className="flex items-center justify-center h-[400px] ">

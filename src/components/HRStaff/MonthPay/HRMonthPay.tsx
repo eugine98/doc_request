@@ -78,7 +78,7 @@ useEffect(() => {
                 <div className="flex items-center rounded-lg dark:text-white group w-40">
                 <GrDocumentText className='w-4 h-4' />
                 <div className='flex'>
-                    <p className='flex-1 ms-1 mt-1.5 whitespace-nowrap group-hover:text-blue-600'>Pending</p>\
+                    <p className='flex-1 ms-1 mt-1.5 whitespace-nowrap group-hover:text-blue-600'>Pending</p>
                 </div>
               </div>
               </li>

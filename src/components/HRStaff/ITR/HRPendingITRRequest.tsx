@@ -477,7 +477,7 @@ export function DataTableDemo() {
                               {requestStatus > 1 ? (
                                     <p>Done!</p>
                                   ):(
-                                    requestStatus == 1 ? <p className="font-medium text-xs">Click 'Done' if the form is signed by the HR Manager.</p> : <p className="font-medium text-xs">Undone!</p>
+                                    requestStatus == 1 ? <p className="font-medium text-xs">Click "Done" if this task is complete.</p> : <p className="font-medium text-xs">Undone!</p>
                                   )}
                               </div>
                             {requestStatus == 1 && (
@@ -525,7 +525,7 @@ export function DataTableDemo() {
                               {requestStatus > 2 ? (
                                     <p>Done!</p>
                                   ):(
-                                    requestStatus == 2 ? <p className="font-medium text-xs">Click 'Done' if the form is signed by the HR Manager.</p> : <p className="font-medium text-xs">Undone!</p>
+                                    requestStatus == 2 ? <p className="font-medium text-xs">Click 'Done' if this task is complete.</p> : <p className="font-medium text-xs">Undone!</p>
                                   )}
                               </div>
                             {requestStatus == 2 && (
@@ -565,7 +565,7 @@ export function DataTableDemo() {
                               {requestStatus > 3 ? (
                                     <p>Done!</p>
                                   ):(
-                                    requestStatus == 3 ? <p className="font-medium text-xs">Click 'Done' if the ITR is processed by the accounting staff.</p> : <p className="font-medium text-xs">Undone!</p>
+                                    requestStatus == 3 ? <p className="font-medium text-xs">Click 'Done' if this task is complete.</p> : <p className="font-medium text-xs">Undone!</p>
                                     
                                   )}
                               </div>
@@ -613,7 +613,7 @@ export function DataTableDemo() {
                               {requestStatus > 4 ? (
                                     <p>Done!</p>
                                   ):(
-                                    requestStatus == 4 ? <p className="font-medium text-xs">Click 'Done' if the form is signed by the Accounting Manager.</p> : <p className="font-medium text-xs">Undone!</p>
+                                    requestStatus == 4 ? <p className="font-medium text-xs">Click 'Done' if this task is complete.</p> : <p className="font-medium text-xs">Undone!</p>
                                     //<p className="font-medium text-xs">Click 'Done' if the form is signed by the Accounting Manager.</p>
                                   )}
                               </div>
@@ -653,7 +653,7 @@ export function DataTableDemo() {
                               {requestStatus > 5 ? (
                                     <p>Done!</p>
                                   ):(
-                                    requestStatus == 5 ? <p className="font-medium text-xs">Click 'Done' if the ITR is returned to HR staff.</p> : <p className="font-medium text-xs">Undone!</p>
+                                    requestStatus == 5 ? <p className="font-medium text-xs">Click 'Done' if this task is complete.</p> : <p className="font-medium text-xs">Undone!</p>
                                     //<p className="font-medium text-xs">Click 'Done' if the ITR is returned to HR staff.</p>
                                   )}
                               </div>
@@ -692,7 +692,7 @@ export function DataTableDemo() {
                                 {requestStatus > 6 ? (
                                       <p>Done!</p>
                                     ):(
-                                      requestStatus == 6 ? <p className="font-medium text-xs">Click 'Done' if you have notified the employee to claim the ITR.</p> : <p className="font-medium text-xs">Undone!</p>
+                                      requestStatus == 6 ? <p className="font-medium text-xs">Click 'Done' if this task is complete.</p> : <p className="font-medium text-xs">Undone!</p>
                                       //<p className="font-medium text-xs">Click 'Done' if you have notified the employee to claim the ITR.</p>
                                     )}
                             </div>
@@ -730,7 +730,7 @@ export function DataTableDemo() {
                               {requestStatus > 7 ? (
                                     <p>Done!</p>
                                   ):(
-                                    requestStatus == 7 ? <p className="font-medium text-xs">Click 'Done' if the ITR has been claimed.</p> : <p className="font-medium text-xs">Undone!</p>
+                                    requestStatus == 7 ? <p className="font-medium text-xs">Click 'Done' if this task is complete.</p> : <p className="font-medium text-xs">Undone!</p>
                                     //<p className="font-medium text-xs">Click 'Done' if the ITR has been claimed.</p>
                                   )}
                               </div>
@@ -1125,7 +1125,9 @@ export function DataTableDemo() {
           <TableBody style={{fontFamily: "Poppins, sans-serif", fontWeight: 410}} className=" text-[0.65rem] text-gray-900">
             {table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className="">
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} 
+                className={`${row.index % 2 !== 1 ? 'bg-slate-100' : ''}`}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

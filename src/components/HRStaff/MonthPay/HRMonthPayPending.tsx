@@ -383,7 +383,7 @@ import {
                       </AlertDialogDescription>
                       <Accordion type="single" collapsible className="w-full">
                           <AccordionItem value="item-1">
-                            <AccordionTrigger className={` text-[0.8rem] pt-3 pb-3 ${requestStatus > 0 ? 'text-green-600' : 'text-red-600'}`}>Hr Staff to validate the request form</AccordionTrigger>
+                            <AccordionTrigger className={` text-[0.7rem] sm:text-[0.8rem] sm:pt-3 sm:pb-3 pt-1.5 pb-1.5 ${requestStatus > 0 ? 'text-green-600' : 'text-red-600'}`}>Hr Staff to validate the request form</AccordionTrigger>
                             <AccordionContent>
                             <div>
                               {requestStatus > 0 ? (
@@ -468,7 +468,7 @@ import {
                             </AccordionContent>
                           </AccordionItem>
                           <AccordionItem value="item-2">
-                            <AccordionTrigger className={` text-[0.8rem] pt-3 pb-3 ${requestStatus > 1 ? 'text-green-600' : 'text-red-600'}`}>
+                            <AccordionTrigger className={` text-[0.7rem] sm:text-[0.8rem] sm:pt-3 sm:pb-3 pt-1.5 pb-1.5 ${requestStatus > 1 ? 'text-green-600' : 'text-red-600'}`}>
                                 {/* <div className="flex justify-start">
                                   <p>
                                   For Sign
@@ -483,7 +483,7 @@ import {
                                 {requestStatus > 1 ? (
                                       <p>Done!</p>
                                     ):(
-                                      requestStatus == 1 ? <p className="font-medium text-xs">Click 'done' if this task is finished.</p> : <p className="font-medium text-xs">Undone!</p>
+                                      requestStatus == 1 ? <p className="font-medium text-xs">Click 'Done' if this task is complete.</p> : <p className="font-medium text-xs">Undone!</p>
                                     )}
                                 </div>
                               {requestStatus == 1 && (
@@ -516,7 +516,7 @@ import {
                             </AccordionContent>
                           </AccordionItem>
                           <AccordionItem value="item-2.1">
-                            <AccordionTrigger className={` text-[0.8rem] pt-3 pb-3 ${requestStatus > 2 ? 'text-green-600' : 'text-red-600'}`}>
+                            <AccordionTrigger className={` text-[0.7rem] sm:text-[0.8rem] sm:pt-3 sm:pb-3 pt-1.5 pb-1.5 ${requestStatus > 2 ? 'text-green-600' : 'text-red-600'}`}>
                                 Hr Staff will transmit the signed request form to Accounting Staff
                               </AccordionTrigger>
                             <AccordionContent>
@@ -525,7 +525,7 @@ import {
                                 {requestStatus > 2 ? (
                                       <p>Done!</p>
                                     ):(
-                                      requestStatus == 2 ? <p className="font-medium text-xs">Click 'done' if this task is finished.</p> : <p className="font-medium text-xs">Undone!</p>
+                                      requestStatus == 2 ? <p className="font-medium text-xs">Click 'Done' if this task is complete.</p> : <p className="font-medium text-xs">Undone!</p>
                                     )}
                                 </div>
                               {requestStatus == 2 && (
@@ -558,14 +558,14 @@ import {
                             </AccordionContent>
                           </AccordionItem>
                           <AccordionItem value="item-3.1">
-                            <AccordionTrigger className={` text-[0.8rem] pt-3 pb-3 ${requestStatus > 3 ? 'text-green-600' : 'text-red-600'}`}>Accounting Staff check if EE’s clearance status is already cleared.</AccordionTrigger>
+                            <AccordionTrigger className={` text-[0.7rem] sm:text-[0.8rem] sm:pt-3 sm:pb-3 pt-1.5 pb-1.5 ${requestStatus > 3 ? 'text-green-600' : 'text-red-600'}`}>Accounting Staff check if EE’s clearance status is already cleared.</AccordionTrigger>
                             <AccordionContent>
                             <div>
                             <div>
                                 {requestStatus > 3 ? (
                                       <p>Done!</p>
                                     ):(
-                                      requestStatus == 3 ? <p className="font-medium text-xs">Click 'done' if this task is finished.</p> : <p className="font-medium text-xs">Undone!</p>
+                                      requestStatus == 3 ? <p className="font-medium text-xs">Click 'Done' if this task is complete.</p> : <p className="font-medium text-xs">Undone!</p>
                                     )}
                                 </div>
                               {requestStatus == 3 && (
@@ -597,14 +597,14 @@ import {
                             </AccordionContent>
                           </AccordionItem>
                           <AccordionItem value="item-3">
-                            <AccordionTrigger className={` text-[0.8rem] pt-3 pb-3 ${requestStatus > 4 ? 'text-green-600' : 'text-red-600'}`}>Accounting Staff processing the 13th Month Pay checked.</AccordionTrigger>
+                            <AccordionTrigger className={` text-[0.7rem] sm:text-[0.8rem] sm:pt-3 sm:pb-3 pt-1.5 pb-1.5 ${requestStatus > 4 ? 'text-green-600' : 'text-red-600'}`}>Accounting Staff processing the 13th Month Pay checked.</AccordionTrigger>
                             <AccordionContent>
                             <div>
                             <div>
                                 {requestStatus > 4 ? (
                                       <p>Done!</p>
                                     ):(
-                                      requestStatus == 4 ? <p className="font-medium text-xs">Click 'done' if this task is finished.</p> : <p className="font-medium text-xs">Undone!</p>
+                                      requestStatus == 4 ? <p className="font-medium text-xs">Click 'Done' if this task is complete.</p> : <p className="font-medium text-xs">Undone!</p>
                                       
                                     )}
                                 </div>
@@ -637,7 +637,7 @@ import {
                             </AccordionContent>
                           </AccordionItem>
                           <AccordionItem value="item-4">
-                            <AccordionTrigger className={` text-[0.8rem] pt-3 pb-3 ${requestStatus > 5 ? 'text-green-600' : 'text-red-600'}`}>
+                            <AccordionTrigger className={` text-[0.7rem] sm:text-[0.8rem] sm:pt-3 sm:pb-3 pt-1.5 pb-1.5 ${requestStatus > 5 ? 'text-green-600' : 'text-red-600'}`}>
                                 Accounting Staff will transmitted the 13th month check w/ voucher to HR Staff.
                             </AccordionTrigger>
                             <AccordionContent>
@@ -646,7 +646,7 @@ import {
                                 {requestStatus > 5 ? (
                                       <p>Done!</p>
                                     ):(
-                                      requestStatus == 5 ? <p className="font-medium text-xs">Click 'done' if this task is finished.</p> : <p className="font-medium text-xs">Undone!</p>
+                                      requestStatus == 5 ? <p className="font-medium text-xs">Click 'Done' if this task is complete.</p> : <p className="font-medium text-xs">Undone!</p>
                                       //<p className="font-medium text-xs">Click 'Done' if the form is signed by the Accounting Manager.</p>
                                     )}
                                 </div>
@@ -679,14 +679,14 @@ import {
                             </AccordionContent>
                           </AccordionItem>
                           <AccordionItem value="item-5">
-                            <AccordionTrigger className={` text-[0.8rem] pt-3 pb-3 ${requestStatus > 6 ? 'text-green-600' : 'text-red-600'}`}>Hr Staff will give the  13th month check to the assigned signatory</AccordionTrigger>
+                            <AccordionTrigger className={` text-[0.7rem] sm:text-[0.8rem] sm:pt-3 sm:pb-3 pt-1.5 pb-1.5 ${requestStatus > 6 ? 'text-green-600' : 'text-red-600'}`}>Hr Staff will give the  13th month check to the assigned signatory</AccordionTrigger>
                             <AccordionContent>
                             <div>
                             <div>
                                 {requestStatus > 6 ? (
                                       <p>Done!</p>
                                     ):(
-                                      requestStatus == 5 ? <p className="font-medium text-xs">Click 'done' if this task is finished.</p> : <p className="font-medium text-xs">Undone!</p>
+                                      requestStatus == 6 ? <p className="font-medium text-xs">Click 'Done' if this task is complete.</p> : <p className="font-medium text-xs">Undone!</p>
                                       //<p className="font-medium text-xs">Click 'Done' if the ITR is returned to HR staff.</p>
                                     )}
                                 </div>
@@ -719,13 +719,13 @@ import {
                             </AccordionContent>
                           </AccordionItem>
                           <AccordionItem value="item-6">
-                            <AccordionTrigger className={` text-[0.8rem] pt-3 pb-3 ${requestStatus > 7 ? 'text-green-600' : 'text-red-600'}`}>Hr Staff to notify the EE</AccordionTrigger>
+                            <AccordionTrigger className={` text-[0.7rem] sm:text-[0.8rem] sm:pt-3 sm:pb-3 pt-1.5 pb-1.5 ${requestStatus > 7 ? 'text-green-600' : 'text-red-600'}`}>Hr Staff to notify the EE</AccordionTrigger>
                             <AccordionContent>
                               <div>
                                   {requestStatus > 7 ? (
                                         <p>Done!</p>
                                       ):(
-                                        requestStatus == 7 ? <p className="font-medium text-xs">Click 'done' if this task is finished.</p> : <p className="font-medium text-xs">Undone!</p>
+                                        requestStatus == 7 ? <p className="font-medium text-xs">Click 'Done' if this task is complete.</p> : <p className="font-medium text-xs">Undone!</p>
                                         //<p className="font-medium text-xs">Click 'Done' if you have notified the employee to claim the ITR.</p>
                                       )}
                               </div>
@@ -756,14 +756,14 @@ import {
                             </AccordionContent>
                           </AccordionItem>
                           <AccordionItem value="item-7">
-                            <AccordionTrigger className={` text-[0.8rem] pt-3 pb-3 ${requestStatus > 8 ? 'text-green-600' : 'text-red-600'}`}>EE to claim and sign the receiving copy.</AccordionTrigger>
+                            <AccordionTrigger className={` text-[0.7rem] sm:text-[0.8rem] sm:pt-3 sm:pb-3 pt-1.5 pb-1.5 ${requestStatus > 8 ? 'text-green-600' : 'text-red-600'}`}>EE to claim and sign the receiving copy.</AccordionTrigger>
                             <AccordionContent>
                             <div>
                             <div>
                                 {requestStatus > 8 ? (
                                       <p>Done!</p>
                                     ):(
-                                      requestStatus == 8 ? <p className="font-medium text-xs">Click 'done' if this task is finished.</p> : <p className="font-medium text-xs">Undone!</p>
+                                      requestStatus == 8 ? <p className="font-medium text-xs">Click 'Done' if this task is complete.</p> : <p className="font-medium text-xs">Undone!</p>
                                       //<p className="font-medium text-xs">Click 'Done' if the ITR has been claimed.</p>
                                     )}
                                 </div>

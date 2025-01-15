@@ -219,7 +219,7 @@ import {
                     <DialogContent className="">
                       <DialogHeader>
                         <div className="">
-                          <form className="w-full space-y-4 p-3 bg-white rounded shadow-md text-gray-700 text-xs font-medium" 
+                          <form className="w-full space-y-4 p-3 bg-white rounded shadow-md text-gray-700 text-[0.65rem] font-medium" 
                             style={{fontFamily: "Poppins, sans-serif"}}
                             >
                                 <div>

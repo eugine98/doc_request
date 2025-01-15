@@ -10,7 +10,7 @@ import useStore from "./store";
 import { MdErrorOutline } from "react-icons/md";
 import { toast } from 'sonner';
 import { Button } from "@/components/ui/button"
-import { IoInformationCircleOutline } from "react-icons/io5";
+import { IoEyeSharp, IoInformationCircleOutline } from "react-icons/io5";
 import { CgSpinner } from "react-icons/cg";
 import axios from 'axios';
 
@@ -55,6 +55,7 @@ import {
     CardTitle,
   } from "@/components/ui/card"
   import { Input } from "@/components/ui/input"
+import { FaEyeSlash } from "react-icons/fa";
 
 
 
@@ -72,6 +73,7 @@ interface loginCred {
 function LoginEmployee() {
     const [empDatabase, setEmpDatabase] = useState<intEmpDatabase | undefined>(undefined);
     const { empData, setEmpData } = useStore();
+    const [showPassword, setShowPassword] = useState<boolean>(false); // State to toggle password visibility
     const navigate = useNavigate();
     const [empStatus, setEmpStatus] = useState("None")
     const { register, handleSubmit } = useForm<FormData>({ resolver: zodResolver(schema) });
@@ -79,6 +81,10 @@ function LoginEmployee() {
     const [lname, setLname] = useState("")
     const [mail, setMail] = useState("")
     const [loginAs, setLoginAs] = useState("")
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword); // Toggle the state to show/hide password
+      };
 
     const login = async (userPass: loginCred) => {
         try {
@@ -129,7 +135,6 @@ function LoginEmployee() {
             const response = data;
             // console.log("DONE! done", typeof response_ini.data.res.code);
             if (response.data.res.code !== 0) {
-
                 if(response.data.res.message.includes('<br>')){
                 const message = response.data.res.message;
                 // Function to extract remaining tries from the message
@@ -418,38 +423,66 @@ function LoginEmployee() {
                     <Button onClick={() => closeLoginAsDialog(empDatabase!)} className="h-8">Submit</Button> 
                     </AlertDialogFooter>
                 </AlertDialogContent>
-                </AlertDialog>
+            </AlertDialog>
         </div> 
-         <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-800">
-         <Card className="w-[350px]">
-            <CardHeader>
-                <CardTitle>Login</CardTitle>
-                <CardDescription></CardDescription>
-            </CardHeader>
-            <CardContent>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="grid w-full items-center gap-3">
-                        <div className="flex flex-col space-y-1.5">
-                            <Label htmlFor="uname">Username</Label>
-                            <Input disabled={isLoading} id="uname" {...register("uname")} className=" uppercase" required/>
-                        </div>
-                        <div className="flex flex-col space-y-1.5">
-                            <Label htmlFor="pass">Password</Label>
-                            <Input disabled={isLoading} id="pass" type="password" {...register("pass")} required/>
-                        </div>
-                        <div className="flex">
-                            <Label >Status:</Label>
-                            <Label className="hover:cursor-pointer ms-1 underline text-green-700 hover:text-green-600" onClick={()=> !isLoading && openDialog()}>{empStatus}</Label>
-                            <div className={`w-2 h-2 mt-1 ms-1 rounded-full  ${empStatus == 'active' ? 'bg-green-700' : 'bg-red-700'}`}/>
-                        </div>
+         <div className="flex items-center justify-center min-h-screen bg-slate-100"
+            // style={{
+            //     background: 'linear-gradient(0deg, rgba(0,34,68,1) 25%, rgba(0,70,135,1) 100%)',
+            // }}
+         >
+            <div className="w-full sm:flex justify-center sm:justify-normal ml-10 mr-10 lg:ml-52 lg:mr-52 rounded-sm bg-white mt-5 sm:mt-0 mb-5 sm:mb-0"
+
+            >
+                <div className="sm:w-1/2 w-full flex-col lg:p-10 lg:pr-5 lg:pl-5 p-16 sm:border-r-[3px] border-b-[3px] sm:border-b-0 border-slate-100 mt-0 sm:mt-12 md:mt-9 lg:mt-0">
+                    <img src="src\assets\img\fpo2.png" className="flex" alt="Logo"/>
+                    <div className="flex-col mt-2">
+                        <p className="flex justify-center text-lg">DOCUMENT REQUEST</p>
+                        <p className="flex justify-center text-[0.54rem] font-medium text-slate-500 italic">Integrated with HRMS Credentials</p>
                     </div>
-                    <CardFooter className="flex justify-end p-0 mt-10 w-full">
-                        {/* <CgSpinner className=" animate-spin inline w-4 h-4 me-3 text-white  border border-red-600" /> */}
-                        <Button disabled={isLoading} type="submit" className="w-full">{isLoading ? <div className="flex"><CgSpinner className=" animate-spin inline w-5 h-5 me-3 text-white" /> <p>Logging in . . .  .</p></div> : 'Login'}</Button>
-                    </CardFooter>
-                </form>
-            </CardContent>
-        </Card>
+                </div>
+                <Card className="sm:w-1/2 w-full text-black shadow-none rounded-sm bg-inherit border-none"             
+
+                >
+                <CardHeader >
+                    <CardTitle className="font-medium">Login</CardTitle>
+                    <CardDescription></CardDescription>
+                </CardHeader>
+                <CardContent >
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <div className="grid w-full items-center gap-3">
+                            <div className="flex flex-col space-y-1.5">
+                                <Label htmlFor="uname" className="font-normal" >Username</Label>
+                                <Input disabled={isLoading} id="uname" {...register("uname")} className=" uppercase" required/>
+                            </div>
+                            <div className="flex flex-col space-y-1.5">
+                                <Label htmlFor="pass" className="font-normal">Password</Label>
+                                <div className=" relative">
+                                    <Input disabled={isLoading} id="pass"  type={showPassword ? "text" : "password"} {...register("pass")} required/>
+                                    <div className="flex justify-end mr-2">
+                                    {showPassword ? 
+                                    (<FaEyeSlash className=" absolute top-0 text-slate-800 mt-[0.2rem] h-7 w-7 ml-[16.8rem] hover:cursor-pointer bg-white pl-1 pr-1" onClick={togglePasswordVisibility} />) 
+                                    :
+                                    (<IoEyeSharp className=" absolute top-0 text-slate-800 mt-[0.2rem] h-7 w-7 ml-[16.8rem] hover:cursor-pointer bg-white pl-1 pr-1" onClick={togglePasswordVisibility} />)}
+                                    </div>
+                                   
+                                </div>
+                                
+                            </div>
+                            <div className="flex">
+                                <Label className="font-normal">Status:</Label>
+                                <Label className="hover:cursor-pointer ms-1 underline text-green-700 hover:text-green-600" onClick={()=> !isLoading && openDialog()}>{empStatus}</Label>
+                                <div className={`w-2 h-2 mt-1 ms-1 rounded-full  ${empStatus == 'active' ? 'bg-green-700' : 'bg-red-700'}`}/>
+                            </div>
+                        </div>
+                        <CardFooter className="flex justify-end p-0 mt-10 w-full">
+                            {/* <CgSpinner className=" animate-spin inline w-4 h-4 me-3 text-white  border border-red-600" /> */}
+                            <Button disabled={isLoading} type="submit" className="w-full bg-[#002796]" style={{background: '#002796'}}>{isLoading ? <div className="flex"><CgSpinner className=" animate-spin inline w-5 h-5 me-3 text-white"/> <p>Logging in . . .  .</p></div> : 'Login'}</Button>
+                        </CardFooter>
+                    </form>
+                </CardContent>
+                </Card>
+            </div>
+         
         </div>
         </>
        

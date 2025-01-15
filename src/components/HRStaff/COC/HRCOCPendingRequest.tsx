@@ -475,7 +475,7 @@ import {
                                 {requestStatus > 1 ? (
                                       <p>Done!</p>
                                     ):(
-                                      requestStatus == 1 ? <p className="font-medium text-xs">Click 'Done' if the form is signed by the HR Manager.</p> : <p className="font-medium text-xs">Undone!</p>
+                                      requestStatus == 1 ? <p className="font-medium text-xs">Click 'Done' if this task is complete.</p> : <p className="font-medium text-xs">Undone!</p>
                                     )}
                                 </div>
                               {requestStatus == 1 && (
@@ -517,7 +517,7 @@ import {
                                 {requestStatus > 2 ? (
                                       <p>Done!</p>
                                     ):(
-                                      requestStatus == 2 ? <p className="font-medium text-xs">Click 'Done' if the form is signed by the HR Manager.</p> : <p className="font-medium text-xs">Undone!</p>
+                                      requestStatus == 2 ? <p className="font-medium text-xs">Click 'Done' if this task is complete.</p> : <p className="font-medium text-xs">Undone!</p>
                                     )}
                                 </div>
                               {requestStatus == 2 && (
@@ -559,7 +559,7 @@ import {
                                 {requestStatus > 3 ? (
                                       <p>Done!</p>
                                     ):(
-                                      requestStatus == 3 ? <p className="font-medium text-xs">Click 'Done' if the ITR is processed by the accounting staff.</p> : <p className="font-medium text-xs">Undone!</p>
+                                      requestStatus == 3 ? <p className="font-medium text-xs">Click 'Done' if this task is complete.</p> : <p className="font-medium text-xs">Undone!</p>
                                       
                                     )}
                                 </div>
@@ -601,7 +601,7 @@ import {
                                 {requestStatus > 4 ? (
                                       <p>Done!</p>
                                     ):(
-                                      requestStatus == 4 ? <p className="font-medium text-xs">Click 'Done' if the form is signed by the Accounting Manager.</p> : <p className="font-medium text-xs">Undone!</p>
+                                      requestStatus == 4 ? <p className="font-medium text-xs">Click 'Done' if this task is complete.</p> : <p className="font-medium text-xs">Undone!</p>
                                       //<p className="font-medium text-xs">Click 'Done' if the form is signed by the Accounting Manager.</p>
                                     )}
                                 </div>
@@ -643,7 +643,7 @@ import {
                                 {requestStatus > 5 ? (
                                       <p>Done!</p>
                                     ):(
-                                      requestStatus == 5 ? <p className="font-medium text-xs">Click 'Done' if the ITR is returned to HR staff.</p> : <p className="font-medium text-xs">Undone!</p>
+                                      requestStatus == 5 ? <p className="font-medium text-xs">Click 'Done' if this task is complete.</p> : <p className="font-medium text-xs">Undone!</p>
                                       //<p className="font-medium text-xs">Click 'Done' if the ITR is returned to HR staff.</p>
                                     )}
                                 </div>
@@ -682,7 +682,7 @@ import {
                                   {requestStatus > 6 ? (
                                         <p>Done!</p>
                                       ):(
-                                        requestStatus == 6 ? <p className="font-medium text-xs">Click 'Done' if you have notified the employee to claim the ITR.</p> : <p className="font-medium text-xs">Undone!</p>
+                                        requestStatus == 6 ? <p className="font-medium text-xs">Click 'Done' if this task is complete.</p> : <p className="font-medium text-xs">Undone!</p>
                                         //<p className="font-medium text-xs">Click 'Done' if you have notified the employee to claim the ITR.</p>
                                       )}
                               </div>
@@ -720,7 +720,7 @@ import {
                                 {requestStatus > 7 ? (
                                       <p>Done!</p>
                                     ):(
-                                      requestStatus == 7 ? <p className="font-medium text-xs">Click 'Done' if the ITR has been claimed.</p> : <p className="font-medium text-xs">Undone!</p>
+                                      requestStatus == 7 ? <p className="font-medium text-xs">Click 'Done' if this task is complete.</p> : <p className="font-medium text-xs">Undone!</p>
                                       //<p className="font-medium text-xs">Click 'Done' if the ITR has been claimed.</p>
                                     )}
                                 </div>
