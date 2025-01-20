@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { IoEyeSharp, IoInformationCircleOutline } from "react-icons/io5";
 import { CgSpinner } from "react-icons/cg";
 import axios from "axios";
+import fpo2 from "../../../assets/img/fpo2.png";
 
 interface intEmpDatabase {
   status: string;
@@ -501,7 +502,7 @@ function LoginEmployee() {
       >
         <div className="w-full sm:flex justify-center sm:justify-normal ml-10 mr-10 lg:ml-52 lg:mr-52 rounded-sm bg-white mt-5 sm:mt-0 mb-5 sm:mb-0">
           <div className="sm:w-1/2 w-full flex-col lg:p-10 lg:pr-5 lg:pl-5 p-16 sm:border-r-[3px] border-b-[3px] sm:border-b-0 border-slate-100 mt-0 sm:mt-12 md:mt-9 lg:mt-0">
-            <img src="src\assets\img\fpo2.png" className="flex" alt="Logo" />
+            <img src={fpo2} className="flex" alt="Logo" />
             <div className="flex-col mt-2">
               <p className="flex justify-center text-lg">DOCUMENT REQUEST</p>
               <p className="flex justify-center text-[0.54rem] font-medium text-slate-500 italic">

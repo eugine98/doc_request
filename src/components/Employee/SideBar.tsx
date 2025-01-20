@@ -11,6 +11,7 @@ import axios from "axios";
 import { API_SERVER_URL } from "@/config";
 import { useQuery } from "@tanstack/react-query";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import fpo2 from "../../assets/img/fpo2.png";
 
 import {
   AlertDialog,
@@ -332,7 +333,8 @@ function SideBar() {
             >
               <div className="flex justify-center">
                 <img
-                  src="src\assets\img\fpo2.png"
+                  // src="src\assets\img\fpo2.png"
+                  src={fpo2}
                   className=" sm:pt-2 p-0.5"
                   alt="Logo"
                 />
