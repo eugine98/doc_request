@@ -18,6 +18,7 @@ import { MdErrorOutline } from "react-icons/md";
 import { toast } from "sonner";
 import Loader from "@/components/Loader";
 import { NotebookPen } from "lucide-react";
+import idcsi from "../../../assets/img/idcsi.png";
 
 const schema = z.object({
   // id_no: z.string().min(1, { message: "Name is required." }),
@@ -303,7 +304,8 @@ function MonthPay() {
                       >
                         <div className="flex justify-center">
                           <img
-                            src="src\assets\img\idcsi.png"
+                            // src="src\assets\img\idcsi.png"
+                            src={idcsi}
                             className="h-14 sm:h-10 lg:h-16 w-20 "
                             alt="Logo"
                           />
